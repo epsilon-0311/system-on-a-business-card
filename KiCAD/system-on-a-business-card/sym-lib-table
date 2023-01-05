@@ -1,0 +1,9 @@
+(sym_lib_table
+  (lib (name "Prj_touch_sensors")(type "KiCad")(uri "${KIPRJMOD}/../libraries/touch_sensors.kicad_sym")(options "")(descr ""))
+  (lib (name "MCU_Raspberry")(type "KiCad")(uri "${KIPRJMOD}/../libraries/MCU_RaspberryPi.kicad_sym")(options "")(descr ""))
+  (lib (name "MCU_Espressif")(type "KiCad")(uri "${KIPRJMOD}/../libraries/MCU_Espressif.kicad_sym")(options "")(descr ""))
+  (lib (name "Prj_dcdc_converter")(type "KiCad")(uri "${KIPRJMOD}/../libraries/dcdc_converter.kicad_sym")(options "")(descr ""))
+  (lib (name "Prj_Memory_Flash")(type "KiCad")(uri "${KIPRJMOD}/../libraries/Prj_Memory_Flash.kicad_sym")(options "")(descr ""))
+  (lib (name "Prj_antenna")(type "KiCad")(uri "${KIPRJMOD}/../libraries/Prj_antenna.kicad_sym")(options "")(descr ""))
+  (lib (name "Prj_MosFET")(type "KiCad")(uri "${KIPRJMOD}/../libraries/Prj_MosFET.kicad_sym")(options "")(descr ""))
+)
