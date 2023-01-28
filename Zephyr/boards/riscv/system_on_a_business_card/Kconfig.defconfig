@@ -10,7 +10,6 @@ if BOARD_SYSTEM_ON_A_BUSINESS_CARD
 
 
 	if BT
-
 		config HEAP_MEM_POOL_SIZE
 			default 16384
 

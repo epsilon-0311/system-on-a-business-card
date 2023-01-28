@@ -7,21 +7,30 @@
 /dts-v1/;
 
 #include <espressif/esp32c3.dtsi>
-#include "esp32c3_devkitm-pinctrl.dtsi"
+#include "system_on_a_business_card-pinctrl.dtsi"
 
 / {
-	model = "esp32c3_devkitm";
+	model = "system_on_a_business_card";
 	compatible = "espressif,esp32c3";
 
 	chosen {
 		zephyr,sram = &sram0;
-		zephyr,console = &uart0;
-		zephyr,shell-uart = &uart0;
+		zephyr,console = &usb_serial;
+		zephyr,shell-uart = &usb_serial;
 		zephyr,flash = &flash0;
 	};
 
 	aliases {
-		sw0 = &user_button1;
+		btn_start = &user_button_start;
+		btn_select = &user_button_select;
+		btn_up = &user_button_up;
+		btn_down = &user_button_down;
+		btn_left = &user_button_left;
+		btn_right = &user_button_rigth;
+		btn_a = &user_button_a;
+		btn_b = &user_button_b;
+		btn_x = &user_button_x;
+		btn_y = &user_button_y;
 		i2c-0 = &i2c0;
 		watchdog0 = &wdt0;
 	};
@@ -44,9 +53,45 @@
 
 	gpio_keys {
 		compatible = "gpio-keys";
-		user_button1: button_1 {
-			label = "User SW1";
-			gpios = <&gpio0 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		user_button_start: button_start {
+			label = "Button Start";
+			gpios = <&gpio0 20 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_select: button_select{
+			label = "Button Select";
+			gpios = <&gpio0 3 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_up: button_up{
+			label = "Button Up";
+			gpios = <&gpio0 7 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_down: button_down{
+			label = "Button Down";
+			gpios = <&gpio0 5 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_left: button_left{
+			label = "Button Left";
+			gpios = <&gpio0 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_right: button_right{
+			label = "Button Right";
+			gpios = <&gpio0 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_a: button_a{
+			label = "Button A";
+			gpios = <&gpio0 1 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_b: button_b{
+			label = "Button B";
+			gpios = <&gpio0 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_x: button_x{
+			label = "Button X";
+			gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+		user_button_y: button_y{
+			label = "Button Y";
+			gpios = <&gpio0 21 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
 		};
 	};
 };
@@ -57,15 +102,12 @@
 };
 
 &uart0 {
-	status = "okay";
-	current-speed = <115200>;
-	pinctrl-0 = <&uart0_default>;
-	pinctrl-names = "default";
+	status = "disabled";
 };
 
 &usb_serial {
-	/* requires resoldering of resistors on the board */
 	status = "okay";
+	current-speed = <115200>;
 };
 
 &i2c0 {
@@ -80,11 +122,7 @@
 };
 
 &spi2 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-	status = "okay";
-	pinctrl-0 = <&spim2_default>;
-	pinctrl-names = "default";
+	status = "disabled";
 };
 
 &gpio0 {
@@ -96,19 +134,15 @@
 };
 
 &timer0 {
-	status = "disabled";
+	status = "okay";
 };
 
 &timer1 {
-	status = "disabled";
+	status = "okay";
 };
 
-&twai {
-	/* requires external CAN transceiver or jumper on RX and TX pins for loopback testing */
-	status = "disabled";
-	pinctrl-0 = <&twai_default>;
-	pinctrl-names = "default";
-	bus-speed = <125000>;
+&wifi {
+	status = "okay";
 };
 
 &flash0 {
