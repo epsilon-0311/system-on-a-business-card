@@ -5,6 +5,7 @@ on:
     - main
     paths:
     - Zephyr/dev-env/Dockerfile
+  workflow_dispatch:
 jobs:
   publish-dev-env:
     runs-on: ubuntu-latest
