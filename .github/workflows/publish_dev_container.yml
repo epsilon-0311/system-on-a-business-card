@@ -23,5 +23,5 @@ jobs:
 
       - name: 'Build Environment '
         run: |
-               docker build Zephyr/dev-env --tag ghcr.io/epsilon-0311/Zephyr-dev-env:latest
-               docker push ghcr.io/epsilon-0311/Zephyr-dev-env:latest
+               docker build Zephyr/dev-env --tag ghcr.io/epsilon-0311/zephyr-dev-env:latest
+               docker push ghcr.io/epsilon-0311/zephyr-dev-env:latest
