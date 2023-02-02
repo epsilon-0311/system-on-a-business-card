@@ -1,23 +1,26 @@
-name: publish_dev_contaienr
-on: [
+name: Publish Development Environment
+on: 
   push:
     branches:
     - main
     paths:
     - Zephyr/dev-env/Dockerfile
-]
 jobs:
-publish-hello-docker-image:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v2
-- name: Login to GitHub Container Registry
-uses: docker/login-action@v1
-with:
-registry: ghcr.io
-username: ${{ github.actor }}
-password: ${{ secrets.GITHUB_TOKEN }}
-- name: Build the development environment for Zephyr
-run: |
-       docker build Zephyr/dev-env --tag ghcr.io/epsilon-0311/Zephyr-dev-env:latest
-       docker push ghcr.io/epsilon-0311/Zephyr-dev-env:latest
+  publish-dev-env:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: 'Login to GitHub Container Registry'
+        uses: actions/checkout@v2
+
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} 
+
+      - name: 'Build Environment '
+        run: |
+               docker build Zephyr/dev-env --tag ghcr.io/epsilon-0311/Zephyr-dev-env:latest
+               docker push ghcr.io/epsilon-0311/Zephyr-dev-env:latest
