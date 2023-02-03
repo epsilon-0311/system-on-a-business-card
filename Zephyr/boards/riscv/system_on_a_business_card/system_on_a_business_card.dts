@@ -21,16 +21,16 @@
 	};
 
 	aliases {
-		btn_start = &user_button_start;
-		btn_select = &user_button_select;
-		btn_up = &user_button_up;
-		btn_down = &user_button_down;
-		btn_left = &user_button_left;
-		btn_right = &user_button_rigth;
-		btn_a = &user_button_a;
-		btn_b = &user_button_b;
-		btn_x = &user_button_x;
-		btn_y = &user_button_y;
+		btn-start = &user_button_start;
+		btn-select = &user_button_select;
+		btn-up = &user_button_up;
+		btn-down = &user_button_down;
+		btn-left = &user_button_left;
+		btn-right = &user_button_right;
+		btn-a = &user_button_a;
+		btn-b = &user_button_b;
+		btn-x = &user_button_x;
+		btn-y = &user_button_y;
 		i2c-0 = &i2c0;
 		watchdog0 = &wdt0;
 	};
