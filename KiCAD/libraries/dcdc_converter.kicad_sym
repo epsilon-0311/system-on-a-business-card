@@ -31,8 +31,8 @@
         (name "V_IN" (effects (font (size 1.27 1.27))))
         (number "3" (effects (font (size 1.27 1.27))))
       )
-      (pin no_connect line (at 10.16 -10.16 180) (length 2.54) hide
-        (name "" (effects (font (size 1.27 1.27))))
+      (pin passive line (at -3.81 -16.51 90) (length 2.54)
+        (name "GND" (effects (font (size 1.27 1.27))))
         (number "4" (effects (font (size 1.27 1.27))))
       )
     )
