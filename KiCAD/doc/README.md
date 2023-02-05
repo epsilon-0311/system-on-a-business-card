@@ -20,7 +20,7 @@ Different ``PATCH`` versions indicate some minor changes in the design, which do
 
 | Revision | Local Link | Github Link | Release Package |
 |---|---|---|---|
-| 1.0.0/1.A  | [BOM](../system-on-a-business-card/bom/ibom_rev_1_0_0.html) | [BOM](https://htmlpreview.github.io/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom_rev_1_0_0.html)|  |
+| 1.0.0/1.A  | [BOM](../system-on-a-business-card/bom/ibom_rev_1_0_0.html) | [BOM](https://htmlpreview.github.io/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom_rev_1_0_0.html)| [Package](https://github.com/epsilon-0311/system-on-a-business-card/releases/tag/board_rev_1_0_0) |
 
 The first batch was produced using the revision 1.A.
 In order to provide a revision compatible with Zephyr, it was changed to ``1.0.0``.
