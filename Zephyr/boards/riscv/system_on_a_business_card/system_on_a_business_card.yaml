@@ -1,4 +1,4 @@
-identifier: esp32c3_devkitm
+identifier: system_on_a_business_card
 name: ESP32-C3
 type: mcu
 arch: riscv

@@ -1132,7 +1132,7 @@
   )
 
   (symbol (lib_id "Connector:Conn_01x13_Male") (at 227.33 80.01 0) (mirror y) (unit 1)
-    (in_bom no) (on_board yes)
+    (in_bom yes) (on_board yes)
     (uuid 8edce804-3dd5-4d9b-9d30-5ec5d601ef11)
     (property "Reference" "J2" (id 0) (at 229.87 80.01 0)
       (effects (font (size 1.27 1.27)) (justify right))
