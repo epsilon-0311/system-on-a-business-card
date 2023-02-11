@@ -47,6 +47,8 @@ If you use the same generator, you can import the svg with a scaling factor of 0
 
 You can find a sourcing guide using [JLCPCB](https://jlcpcb.com/) and [LCSC](https://www.lcsc.com/) as PCB manufacturer and parts suppliere here: [Link](https://docs.google.com/spreadsheets/d/16gFrFvvIfR94LbLsq9TxAxXNphaDNR22jH06x7NUitE/edit?usp=sharing). 
 With the components selected in this Google Spreads, a single PCB with parts will cost around 4€, if at least 10 are manufactured.
+Due to varying costs on the shipment destination, shipment costs were not included in the calculation.
+
 The original goal was to be at around 3€ per board.
 The main cost factors are the used microcontroller (ESP32-C3) and the 0.77 inch OLED display.
 If you are aware of components that can reduce the price, feel free to discuss it in the discussion section on GitHub. 
@@ -54,7 +56,7 @@ If you are aware of components that can reduce the price, feel free to discuss i
 # Possible Future updates to the Design
 
 ## ESP32-C6
-Esprressif has announced the ESP32-C6 with a second conre and more wireless connectivity standards.
+Esprressif has announced the ESP32-C6 with a high and a lowe power core and more wireless connectivity standards.
 At the moment the chip is not available on my default parts provider (LCSC), but it would be nice to check it out due to its more powerfull CPU.
 Further investigation is strongly dependent on the price.
 
