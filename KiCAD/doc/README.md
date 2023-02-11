@@ -43,14 +43,22 @@ On the right side you find the text box for your contact information and below t
 The QR-Code needs to be available as svg graphic and can be imported via File->Import->Graphics.
 If you use the same generator, you can import the svg with a scaling factor of 0.375.
 
-## Possible Future updates to the Design
+# Sourcing Guide 
 
-### ESP32-C6
+You can find a sourcing guide using [JLCPCB](https://jlcpcb.com/) and [LCSC](https://www.lcsc.com/) as PCB manufacturer and parts suppliere here: [Link](https://docs.google.com/spreadsheets/d/16gFrFvvIfR94LbLsq9TxAxXNphaDNR22jH06x7NUitE/edit?usp=sharing). 
+With the components selected in this Google Spreads, a single PCB with parts will cost around 4€, if at least 10 are manufactured.
+The original goal was to be at around 3€ per board.
+The main cost factors are the used microcontroller (ESP32-C3) and the 0.77 inch OLED display.
+If you are aware of components that can reduce the price, feel free to discuss it in the discussion section on GitHub. 
+
+# Possible Future updates to the Design
+
+## ESP32-C6
 Esprressif has announced the ESP32-C6 with a second conre and more wireless connectivity standards.
 At the moment the chip is not available on my default parts provider (LCSC), but it would be nice to check it out due to its more powerfull CPU.
 Further investigation is strongly dependent on the price.
 
-### USB Ciruitry
+## USB Ciruitry
 Currently the design simply pulls power through the USB plug, but this violates the USB specification. 
 For future revisions it would be awesome to add a USB power negotion circuit to board to add comformoty. 
 If you're familiar with the design of such circuits feel free to add some comments.
