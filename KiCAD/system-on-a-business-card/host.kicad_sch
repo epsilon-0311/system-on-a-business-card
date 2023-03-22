@@ -675,7 +675,6 @@
     )
   )
 
-
   (junction (at 220.98 134.62) (diameter 0) (color 0 0 0 0)
     (uuid 09db8636-698e-44fb-9f69-9ca0f40a9359)
   )
@@ -2002,7 +2001,7 @@
     (property "Value" "ZD25WQ32C" (at 228.6 44.45 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Package_SO:SOP-8_3.9x4.9mm_P1.27mm" (at 236.22 39.37 0)
+    (property "Footprint" "Package_SO:SOP-8_5.28x5.23mm_P1.27mm" (at 236.22 39.37 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (at 234.95 44.45 0)
