@@ -5,7 +5,7 @@ It is controlled by a ESP32-C3 microncontroller which shall run Zephyr RTOS in t
 Since this goal is to also use the PCB is a business card, the predominant factor is the size which is 55x85 mm which seems to be the standard, at least for Europe.
 
 A interactive Bill of Materials for the latest released board revision can be found [here](KiCAD/system-on-a-business-card/bom/ibom.html).
-Alternatively, if you have the repositoy open on Github, please use this [link](https://htmlpreview.github.io0/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom.html). 
+Alternatively, if you have the repositoy open on Github, please use this [link](https://htmlpreview.github.io/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom.html). 
 
 For further details on how to customize the desing to add your contact details please have a look at [Customization of the PCB](KiCAD/doc/README.md#Customization-of-the-PCB).
 
