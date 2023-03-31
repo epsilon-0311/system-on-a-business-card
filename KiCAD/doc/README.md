@@ -10,6 +10,8 @@ As a small added benefit this design decision also reduces costs.
 Since this PCB was designed to be also used as a business card, we opted for a thickness of 0.8mm. 
 Main reason for the selected thickness, is that JLCPCB does not charge extra for PCB's between 0.8 and 1.6 mm.
 This has to be taken with a grain of salt, other may charge extra for this.
+The design for the antenna would be simpler to match the impedance, if a 4-Layer would be used. 
+Unfortunately, with the thinner PCB significant extra costs would be added when using more layers.
 
 ## Board Revision History
 
@@ -18,9 +20,10 @@ A board revisions looks as follows ``MAJOR.MINOR.PATCH``.
 ``MINOR`` revisions indicate changes in the hardware design, which requires a change in e.g. the Zephyr device tree.
 Different ``PATCH`` versions indicate some minor changes in the design, which does not affect the software side.
 
-| Revision | Local Link | Github Link | Release Package |
-|---|---|---|---|
-| 1.0.0/1.A  | [BOM](../system-on-a-business-card/bom/ibom_rev_1_0_0.html) | [BOM](https://htmlpreview.github.io/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom_rev_1_0_0.html)| [Package](https://github.com/epsilon-0311/system-on-a-business-card/releases/tag/board_rev_1_0_0) |
+| Revision | Local Link | Github Link | Release Package | Comments |
+|---|---|---|---|---|
+| 1.0.0/1.A  | [BOM](../system-on-a-business-card/bom/ibom_rev_1_0_0.html) | [BOM](https://htmlpreview.github.io/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom_rev_1_0_0.html)| [Package](https://github.com/epsilon-0311/system-on-a-business-card/releases/tag/board_rev_1_0_0) | Initial Version |
+| 1.0.1 | [BOM](../system-on-a-business-card/bom/ibom_rev_1_0_1.html) | [BOM](https://htmlpreview.github.io/?https://github.com/epsilon-0311/system-on-a-business-card/blob/main/KiCAD/system-on-a-business-card/bom/ibom_rev_1_0_1.html)| [Package](https://github.com/epsilon-0311/system-on-a-business-card/releases/tag/board_rev_1_0_1) | <ul><li>Fixed unconnected OLED Logic Supply Voltage</li><li>Updated Resistor to dimm LED D1</li></ul> |
 
 The first batch was produced using the revision 1.A.
 In order to provide a revision compatible with Zephyr, it was changed to ``1.0.0``.

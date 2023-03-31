@@ -23,6 +23,9 @@ Design renderings of a revision 1.A PCB:
 Finished board revision 1.A PCB:
 ![board_picture_rev_1_A](KiCAD/doc/img/board_picture_rev_1_A.jpeg)
 
+Fully assembled revision 1.A PCB:
+![assembled_board_picture_rev_1_A](KiCAD/doc/img/board_picture_rev_1_A_assembled.jpeg)
+
 ## Zephyr
 At the moment I'm working on getting Zephyr running.
 A basic hardware configuration for the board is already available inside the Zephyr directory.
