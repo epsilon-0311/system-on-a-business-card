@@ -34,6 +34,7 @@
 */
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <U8g2lib.h>
 
 #ifdef U8X8_HAVE_HW_SPI
@@ -65,6 +66,12 @@ U8G2_SSD1312_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, SCL, SDA);
 
 #define PAD_SELECT 3
 #define PAD_START 20
+
+
+#define EEPROM_SIZE 64
+#define EEPROM_MAGIC_ADDR 0
+#define EEPROM_MAGIC_VALUE 0x55
+#define EEPROM_HIGHSCORE_ADDR 4
 
 
 /* button setup for Arduboy Production */
@@ -1449,6 +1456,8 @@ void st_Step(uint8_t player_pos_x, uint8_t player_pos_y, uint8_t start_button, u
       st_to_diff_cnt = st_u8g2->width-10;		/* reuse st_to_diff_cnt */
       if ( st_highscore < st_player_points){
 	      st_highscore = st_player_points;
+        EEPROM.write(EEPROM_HIGHSCORE_ADDR, st_highscore);
+        EEPROM.commit();
       }
       st_state = ST_STATE_IEND;
       break;
@@ -1462,7 +1471,6 @@ void st_Step(uint8_t player_pos_x, uint8_t player_pos_y, uint8_t start_button, u
 }
 
 
-
 void setup(void) {
 
   Serial.begin(115200);
@@ -1474,6 +1482,24 @@ void setup(void) {
   
   pinMode(pin_fire, INPUT);
   pinMode(pin_start, INPUT);
+
+  if (!EEPROM.begin(EEPROM_SIZE))
+  {
+    Serial.println("failed to initialise EEPROM"); delay(1000000);
+  }
+
+  if(EEPROM.read(EEPROM_MAGIC_ADDR) != EEPROM_MAGIC_VALUE )
+  {
+    EEPROM.write(EEPROM_MAGIC_ADDR, EEPROM_MAGIC_VALUE );
+    EEPROM.write(EEPROM_HIGHSCORE_ADDR, 0 );
+    
+    EEPROM.commit();
+  }
+  else 
+  {
+
+    st_highscore = EEPROM.read(EEPROM_HIGHSCORE_ADDR);
+  }
 
   u8g2.begin(); 
 }
