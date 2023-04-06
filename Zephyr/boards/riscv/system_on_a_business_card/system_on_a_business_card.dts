@@ -107,7 +107,6 @@
 
 &usb_serial {
 	status = "okay";
-	current-speed = <115200>;
 };
 
 &i2c0 {
