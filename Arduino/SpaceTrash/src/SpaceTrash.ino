@@ -70,7 +70,7 @@ U8G2_SSD1312_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, SCL, SDA);
 
 #define EEPROM_SIZE 64
 #define EEPROM_MAGIC_ADDR 0
-#define EEPROM_MAGIC_VALUE 0x55
+#define EEPROM_MAGIC_VALUE 0xAA
 #define EEPROM_HIGHSCORE_ADDR 4
 
 
@@ -1456,7 +1456,12 @@ void st_Step(uint8_t player_pos_x, uint8_t player_pos_y, uint8_t start_button, u
       st_to_diff_cnt = st_u8g2->width-10;		/* reuse st_to_diff_cnt */
       if ( st_highscore < st_player_points){
 	      st_highscore = st_player_points;
-        EEPROM.write(EEPROM_HIGHSCORE_ADDR, st_highscore);
+        unsigned int st_highscore_tmp = st_player_points;
+
+        EEPROM.write(EEPROM_HIGHSCORE_ADDR+1, st_highscore_tmp);
+        st_highscore_tmp >>= 8;
+        EEPROM.write(EEPROM_HIGHSCORE_ADDR, st_highscore_tmp);
+
         EEPROM.commit();
       }
       st_state = ST_STATE_IEND;
@@ -1492,13 +1497,15 @@ void setup(void) {
   {
     EEPROM.write(EEPROM_MAGIC_ADDR, EEPROM_MAGIC_VALUE );
     EEPROM.write(EEPROM_HIGHSCORE_ADDR, 0 );
-    
+    EEPROM.write(EEPROM_HIGHSCORE_ADDR+1, 0 );
     EEPROM.commit();
   }
   else 
   {
 
     st_highscore = EEPROM.read(EEPROM_HIGHSCORE_ADDR);
+    st_highscore <<= 8;
+    st_highscore |= EEPROM.read(EEPROM_HIGHSCORE_ADDR+1);
   }
 
   u8g2.begin(); 
