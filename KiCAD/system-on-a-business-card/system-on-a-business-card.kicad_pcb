@@ -13754,7 +13754,7 @@
   (gr_text "START" (at 126.5 114) (layer "F.SilkS") (tstamp 74d3b2a4-a8b6-4c66-ac63-4ed4920b099c)
     (effects (font (size 1.5 1.5) (thickness 0.15)))
   )
-  (gr_text "Board-Revision: 1.0.1" (at 105.15 76.15) (layer "F.SilkS") (tstamp 790b9985-1962-4f36-af03-188e22823e22)
+  (gr_text "Board-Revision: 1.0.2" (at 105.15 76.15) (layer "F.SilkS") (tstamp 790b9985-1962-4f36-af03-188e22823e22)
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (gr_text "Boot" (at 157 80) (layer "F.SilkS") (tstamp 8b3931f8-4b55-4915-95c8-8025fb15f4b0)
