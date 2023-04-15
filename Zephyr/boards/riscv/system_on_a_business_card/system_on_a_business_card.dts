@@ -32,6 +32,7 @@
 		btn-x = &user_button_x;
 		btn-y = &user_button_y;
 		i2c-0 = &i2c0;
+		arduion-i2c = &i2c0;
 		watchdog0 = &wdt0;
 	};
 
@@ -114,6 +115,20 @@
 	clock-frequency = <I2C_BITRATE_STANDARD>;
 	pinctrl-0 = <&i2c0_default>;
 	pinctrl-names = "default";
+
+	ssd1312_ssd1312_128x64: ssd1312@3c {
+		compatible = "solomon,ssd1312fb";
+		reg = <0x3c>;
+		width = <128>;
+		height = <64>;
+		segment-offset = <0>;
+		page-offset = <0>;
+		display-offset = <0>;
+		multiplex-ratio = <63>;
+		segment-remap;
+		com-invdir;
+		prechargep = <0x22>;
+	};
 };
 
 &trng0 {

@@ -1,15 +1,18 @@
 
 #!/bin/bash
 
-usage() { echo "Usage: $0 -p <project directory>  -s <serial interface>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 -p <project directory>  -s <serial interface> -b <boards directory>" 1>&2; exit 1; }
 
-while getopts "p:s:j:" o; do
+while getopts "p:s:j:b:" o; do
     case "${o}" in
 		p)
 			p=${OPTARG}
 			;;
 		s)
 			s=${OPTARG}
+			;;
+		b)
+			b=${OPTARG}
 			;;
 		*)
             usage
@@ -23,7 +26,8 @@ if  [ -z "${p}" ]; then
 fi
 
 if  [ -v s ]; then
-    serial="-v ${s}:/dev/ttyUSB0"
+    #serial="-v ${s}:/dev/ttyUSB0"
+    serial="-v /dev/:/dev:rslave --mount type=devpts,destination=/dev/pts"
 fi
 
 
@@ -42,5 +46,5 @@ fi
 cnt=$(podman ps -a | grep iot-container | wc -l)
 #  -v /dev/usb:/dev/usb -v /run/udev:/run/udev:ro
 $CMD run --rm -it --name dev-env-container-${cnt} ${serial} ${jlink} \
-	 --network host --privileged -v ${p}:/workingdir/project  --workdir /workingdir/project  --group-add keep-groups \
+	 --network host --privileged -v ${p}:/workingdir/project:Z -v ${b}:/workingdir/project/boards:Z  --workdir /workingdir/project  --group-add keep-groups \
 	ghcr.io/epsilon-0311/zephyr-dev-env:latest
