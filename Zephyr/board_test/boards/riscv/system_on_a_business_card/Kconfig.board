@@ -1,0 +1,9 @@
+# ESP32C3 devkitm board configuration
+
+# Copyright (c) 2021 Espressif Systems (Shanghai) Co., Ltd.
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_SYSTEM_ON_A_BUSINESS_CARD
+	bool "System on a Buisiness Card"
+	depends on SOC_ESP32C3
+	select CONSOLE_HAS_DRIVER

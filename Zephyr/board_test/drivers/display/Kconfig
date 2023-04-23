@@ -1,0 +1,11 @@
+
+# Display drivers
+
+# Copyright (c) 2017 Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
+if DISPLAY
+
+rsource "ssd1312/Kconfig"
+
+endif # DISPLAY
