@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
-ARG ZSDK_VERSION=0.15.2
-ARG CMAKE_VERSION=3.24.1
+ARG ZSDK_VERSION=0.16.0
+ARG CMAKE_VERSION=3.26.3
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 
 ARG UID=1000
@@ -96,23 +96,26 @@ RUN cd /tmp && wget ${WGET_ARGS} https://github.com/Kitware/CMake/releases/downl
 	rm -f ./cmake-${CMAKE_VERSION}-Linux-x86_64.sh
 
 # Zephyr and python dependencies
-RUN pip3 install wheel pip west 
+RUN pip3 install wheel pip west cmake
 ENV PATH=/.local/bin:$PATH
-RUN west init /workingdir && cd /workingdir && west update
-RUN cd /workingdir && west zephyr-export && pip3 install -r /workingdir/zephyr/scripts/requirements.txt
+RUN west init /zephyrdir && cd /zephyrdir && west update
+RUN cd /zephyrdir && west zephyr-export && pip3 install -r /zephyrdir/zephyr/scripts/requirements.txt
 
 # install ESP32 toolchain
-RUN cd /workingdir && west blobs fetch hal_espressif && west update && west zephyr-export
+RUN cd /zephyrdir && west blobs fetch hal_espressif && west update && west zephyr-export
 ENV ESPRESSIF_TOOLCHAIN_PATH="/root/.espressif/tools/zephyr/xtensa-esp32-elf"
 ENV PATH=$ESPRESSIF_TOOLCHAIN_PATH/bin:$PATH
 
 # Install toolchain
-RUN cd /opt && \
-        wget -qO - https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-x86_64.tar.gz \
-        | tar -xz && \
+#https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.0/zephyr-sdk-0.16.0_linux-x86_64.tar.xz
+RUN cd /zephyrdir && \
+        wget -q https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-x86_64.tar.xz && \
+		tar -xvf zephyr-sdk-${ZSDK_VERSION}_linux-x86_64.tar.xz && \
         chmod +x zephyr-sdk-${ZSDK_VERSION}/setup.sh && \
-        zephyr-sdk-${ZSDK_VERSION}/setup.sh -h -c -t arm-zephyr-eabi 
+        zephyr-sdk-${ZSDK_VERSION}/setup.sh -h -c -t arm-zephyr-eabi && \
+		rm zephyr-sdk-${ZSDK_VERSION}_linux-x86_64.tar.xz
 
-
-WORKDIR /workingdir
+# Configure project environment
+RUN cd /zephyrdir && mkdir project && west config manifest.path project
+WORKDIR /zephyrdir/project
 

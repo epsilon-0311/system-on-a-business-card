@@ -45,6 +45,7 @@ fi
 
 cnt=$(podman ps -a | grep iot-container | wc -l)
 #  -v /dev/usb:/dev/usb -v /run/udev:/run/udev:ro
+# -v ${b}:/workingdir/project/boards:Z 
 $CMD run --rm -it --name dev-env-container-${cnt} ${serial} ${jlink} \
-	 --network host --privileged -v ${p}:/workingdir/project:Z -v ${b}:/workingdir/project/boards:Z  --workdir /workingdir/project  --group-add keep-groups \
+	 --network host --privileged -v ${p}:/zephyrdir/project:Z --workdir /zephyrdir/project  --group-add keep-groups \
 	ghcr.io/epsilon-0311/zephyr-dev-env:latest
