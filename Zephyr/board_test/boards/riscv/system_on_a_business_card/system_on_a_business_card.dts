@@ -127,7 +127,6 @@
 		display-offset = <0>;
 		multiplex-ratio = <63>;
 		segment-remap;
-		com-invdir;
 		prechargep = <0x22>;
 	};
 };
