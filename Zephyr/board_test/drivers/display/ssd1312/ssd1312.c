@@ -14,7 +14,6 @@ LOG_MODULE_REGISTER(ssd1312, CONFIG_DISPLAY_LOG_LEVEL);
 #include <zephyr/init.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/i2c.h>
-#include <zephyr/drivers/spi.h>
 #include <zephyr/kernel.h>
 
 #include "ssd1312_regs.h"
@@ -41,7 +40,7 @@ LOG_MODULE_REGISTER(ssd1312, CONFIG_DISPLAY_LOG_LEVEL);
 #define SSD1312_PANEL_NUMOF_PAGES	(DT_INST_PROP(0, height) / 8)
 #define SSD1312_CLOCK_DIV_RATIO		0x0
 #define SSD1312_CLOCK_FREQUENCY		0x8
-#define SSD1312_PANEL_VCOM_DESEL_LEVEL	0x20
+#define SSD1312_PANEL_VCOM_DESEL_LEVEL	0x40
 #define SSD1312_PANEL_PUMP_VOLTAGE	SSD1312_SET_PUMP_VOLTAGE_90
 
 #ifndef SSD1312_ADDRESSING_MODE
@@ -131,10 +130,8 @@ static inline int ssd1312_set_hardware_config(const struct device *dev)
 static inline int ssd1312_set_charge_pump(const struct device *dev)
 {
 	uint8_t cmd_buf[] = {
-#if defined(CONFIG_SSD1312_DEFAULT)
 		SSD1312_SET_CHARGE_PUMP_ON,
 		SSD1312_SET_CHARGE_PUMP_ON_ENABLED,
-#endif
 		SSD1312_PANEL_PUMP_VOLTAGE,
 	};
 
@@ -276,7 +273,7 @@ static int ssd1312_set_pixel_format(const struct device *dev,
 static int ssd1312_init_device(const struct device *dev)
 {
 	const struct ssd1312_config *config = dev->config;
-
+	
 	uint8_t cmd_buf[] = {
 		SSD1312_SET_ENTIRE_DISPLAY_OFF,
 #ifdef CONFIG_SSD1312_REVERSE_MODE
@@ -286,7 +283,7 @@ static int ssd1312_init_device(const struct device *dev)
 #endif
 	};
 
-	/* Reset if pin connected */
+	// Reset if pin connected
 	if (config->reset.port) {
 		k_sleep(K_MSEC(SSD1312_RESET_DELAY));
 		gpio_pin_set_dt(&config->reset, 1);
@@ -294,7 +291,7 @@ static int ssd1312_init_device(const struct device *dev)
 		gpio_pin_set_dt(&config->reset, 0);
 	}
 
-	/* Turn display off */
+	// Turn display off 
 	if (ssd1312_suspend(dev)) {
 		return -EIO;
 	}
@@ -315,15 +312,18 @@ static int ssd1312_init_device(const struct device *dev)
 		return -EIO;
 	}
 
-	if (ssd1312_write_bus(dev, cmd_buf, sizeof(cmd_buf), true)) {
-		return -EIO;
-	}
-
 	if (ssd1312_set_contrast(dev, CONFIG_SSD1312_DEFAULT_CONTRAST)) {
 		return -EIO;
 	}
 
+	if (ssd1312_write_bus(dev, cmd_buf, sizeof(cmd_buf), true)) {
+		return -EIO;
+	}
 	ssd1312_resume(dev);
+	
+	if (ssd1312_write_bus(dev, cmd_buf, sizeof(cmd_buf), true)) {
+		return -EIO;
+	}
 
 	return 0;
 }

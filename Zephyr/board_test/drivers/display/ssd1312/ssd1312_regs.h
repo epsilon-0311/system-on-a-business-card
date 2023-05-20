@@ -77,6 +77,11 @@
 #define SSD1312_SET_PADS_HW_ALTERNATIVE		0x12
 
 
+#define SSD1312_SET_IREF_SOURCE         0xad
+#define SSD1312_IREF_SOURCE_INTERNAL    0x40
+#define SSD1312_IREF_SOURCE_EXTERNAL    0x50
+
+
 /*
  * Timing and Driving Scheme Setting Command Table
  */
@@ -94,10 +99,6 @@
 #define SSD1312_SET_CHARGE_PUMP_ON		0x8d /* double byte command */
 #define SSD1312_SET_CHARGE_PUMP_ON_DISABLED	0x10
 #define SSD1312_SET_CHARGE_PUMP_ON_ENABLED	0x14
-
-#define SH1106_SET_DCDC_MODE			0xad /* double byte command */
-#define SH1106_SET_DCDC_DISABLED		0x8a
-#define SH1106_SET_DCDC_ENABLED			0x8b
 
 #define SSD1312_SET_PUMP_VOLTAGE_64		0x30
 #define SSD1312_SET_PUMP_VOLTAGE_74		0x31
