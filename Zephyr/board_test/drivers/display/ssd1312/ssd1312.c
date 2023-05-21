@@ -321,10 +321,6 @@ static int ssd1312_init_device(const struct device *dev)
 	}
 	ssd1312_resume(dev);
 	
-	if (ssd1312_write_bus(dev, cmd_buf, sizeof(cmd_buf), true)) {
-		return -EIO;
-	}
-
 	return 0;
 }
 
