@@ -19,24 +19,19 @@
 #include <string.h>
 #include <math.h>
 
+#include "graphics.h"
+#include "controls.h"
+
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 #include "app_version.h"
-
-
-
-
-
-
-
 void main(void)
 {
 	printk("Zephyr Example Application %s\n", APP_VERSION_STR);
 
-	init_buttons();
-	
-	init_display();
+	controls_init();
+	graphics_init();
 
 	while (1)
 	{

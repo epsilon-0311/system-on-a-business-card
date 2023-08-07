@@ -1,15 +1,30 @@
-#include <stdio.h>
-#include <string.h>
+/*
+ * Copyright (c) 2019 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/display.h>
 #include <zephyr/sys/util.h>
+#include <zephyr/sys/printk.h>
 #include <inttypes.h>
 
+#include <lvgl.h>
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#include "controls.h"
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(controls, LOG_LEVEL_DBG);
+
+#include "app_version.h"
 
 #define BTN_START_NODE	DT_ALIAS(btn_start)
 #if !DT_NODE_HAS_STATUS(BTN_START_NODE, okay)
@@ -81,6 +96,7 @@ static struct gpio_callback button_x_cb_data;
 static const struct gpio_dt_spec btn_y = GPIO_DT_SPEC_GET_OR(BTN_Y_NODE, gpios, {0});
 static struct gpio_callback button_y_cb_data;
 
+
 void btn_changed(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
     int start = gpio_pin_get(btn_start.port, btn_start.pin);
@@ -96,7 +112,6 @@ void btn_changed(const struct device *dev, struct gpio_callback *cb, uint32_t pi
 
 	LOG_DBG("Intr: Start:%i Select:%i Up:%i Down:%i Left:%i Right:%i A:%i B:%i X:%i Y:%i\n", start, select, up, down, left, right, a, b, x, y);
 }
-
 
 int init_button(const struct gpio_dt_spec *btn, struct gpio_callback *btn_cb_data)
 {
@@ -124,13 +139,14 @@ int init_button(const struct gpio_dt_spec *btn, struct gpio_callback *btn_cb_dat
 	return 0;
 }
 
-int init_buttons(void)
+void controls_init(void)
 {
-    int ret = init_button(&btn_start, &button_start_cb_data);
+	
+	int ret = init_button(&btn_start, &button_start_cb_data);
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_start initialisation error\n", btn_start.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_start at %s pin %d successfull\n", btn_start.port->name, btn_start.pin);
 
@@ -139,7 +155,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_select initialisation error\n", btn_select.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_select at %s pin %d successfull\n", btn_select.port->name, btn_select.pin);
 
@@ -148,7 +164,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_up initialisation error\n", btn_up.port->name);
-		return ret; 
+		return;
 	}
 	LOG_DBG("Set up btn_upt at %s pin %d successfull\n", btn_up.port->name, btn_up.pin);
 
@@ -157,7 +173,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_down initialisation error\n", btn_down.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_down at %s pin %d successfull\n", btn_down.port->name, btn_down.pin);
 
@@ -166,7 +182,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_left initialisation error\n", btn_left.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_left at %s pin %d successfull\n", btn_left.port->name, btn_left.pin);
 
@@ -175,7 +191,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_right initialisation error\n", btn_right.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_right at %s pin %d successfull\n", btn_right.port->name, btn_right.pin);
 
@@ -184,7 +200,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_a initialisation error\n", btn_a.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_a at %s pin %d successfull\n", btn_a.port->name, btn_a.pin);
 
@@ -193,7 +209,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_b initialisation error\n", btn_b.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_b at %s pin %d successfull\n", btn_b.port->name, btn_b.pin);
 
@@ -201,7 +217,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_x initialisation error\n", btn_x.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_x at %s pin %d successfull\n", btn_x.port->name, btn_x.pin);
 
@@ -210,9 +226,7 @@ int init_buttons(void)
 	if(ret != 0)
 	{
 		LOG_ERR("Error: btn device %s, btn_y initialisation error\n", btn_y.port->name);
-		return ret;
+		return;
 	}
 	LOG_DBG("Set up btn_y at %s pin %d successfull\n", btn_y.port->name, btn_y.pin);
-
-    return 0;
 }
