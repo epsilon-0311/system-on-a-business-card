@@ -6,7 +6,7 @@
 
 /dts-v1/;
 
-#include <espressif/esp32c3.dtsi>
+#include <espressif/esp32c3/esp32c3.dtsi>
 #include "system_on_a_business_card-pinctrl.dtsi"
 
 / {
@@ -36,7 +36,7 @@
 		arduion-i2c = &i2c0;
 		watchdog0 = &wdt0;
 	};
-
+	/*
 	power-states {
 		light_sleep: light_sleep {
 			compatible = "zephyr,power-state";
@@ -52,7 +52,7 @@
 			exit-latency-us = <105>;
 		};
 	};
-
+	*/
 	gpio_keys {
 		compatible = "gpio-keys";
 		user_button_start: button_start {
