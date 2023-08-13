@@ -35,6 +35,7 @@
 		i2c-0 = &i2c0;
 		arduion-i2c = &i2c0;
 		watchdog0 = &wdt0;
+		display0 = &ssd1312_ssd1312_128x64;
 	};
 	/*
 	power-states {
@@ -118,6 +119,7 @@
 	pinctrl-names = "default";
 
 	ssd1312_ssd1312_128x64: ssd1312@3c {
+		label = "Display_0";
 		compatible = "solomon,ssd1312fb";
 		reg = <0x3c>;
 		width = <128>;
