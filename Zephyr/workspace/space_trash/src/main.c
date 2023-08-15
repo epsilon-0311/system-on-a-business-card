@@ -30,7 +30,7 @@ void main(void)
 {
 	printk("Zephyr Example Application %s\n", APP_VERSION_STR);
 
-	controls_init();
+	controls_init(false);
 	graphics_init();
 
 	while (1)
