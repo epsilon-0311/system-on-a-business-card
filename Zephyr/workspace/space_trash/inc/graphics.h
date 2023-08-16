@@ -14,12 +14,18 @@ void graphics_init(void);
 
 uint8_t graphics_draw_image(lv_img_dsc_t *image_src, uint8_t x, uint8_t y);
 
-uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y);
+uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y, uint8_t font_size);
 
 int graphics_set_font_size(uint8_t obj_id, uint8_t size);
 
-int graphics_move_object(uint8_t obj_id, uint8_t x, uint8_t y);
+int graphics_set_text(uint8_t obj_id, char *text);
+
+int graphics_move_object(uint8_t obj_id, int8_t offset_x, int8_t offset_y, bool wrap_around);
+
+int graphics_set_object_position(uint8_t obj_id, uint8_t x, uint8_t y);
 
 int graphics_delete_object(uint8_t obj_id);
+
+void graphics_delete_all_objects(void);
 
 #endif
