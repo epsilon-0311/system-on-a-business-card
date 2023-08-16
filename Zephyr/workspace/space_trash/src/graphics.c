@@ -47,6 +47,33 @@ static lv_color_t white;
 static lv_obj_t *graphic_objects[MAX_GRAPHICS_OBJECTS];
 static uint8_t last_graphics_object_index=0;
 
+static const lv_font_t *fonts[] =
+{
+    &lv_font_montserrat_8,
+    &lv_font_montserrat_10,
+    &lv_font_montserrat_12,
+    &lv_font_montserrat_14,
+    &lv_font_montserrat_16,
+    &lv_font_montserrat_18,
+    &lv_font_montserrat_20,
+    &lv_font_montserrat_22,
+    /*
+    &lv_font_montserrat_24,
+    &lv_font_montserrat_26,
+    &lv_font_montserrat_28,
+    &lv_font_montserrat_30,
+    &lv_font_montserrat_32,
+    &lv_font_montserrat_34,
+    &lv_font_montserrat_36,
+    &lv_font_montserrat_38,
+    &lv_font_montserrat_40,
+    &lv_font_montserrat_42,
+    &lv_font_montserrat_44,
+    &lv_font_montserrat_46,
+    &lv_font_montserrat_48,
+    */
+};
+
 void graphics_init(void)
 {	
 	const struct device *display_dev;
@@ -60,28 +87,36 @@ void graphics_init(void)
 	}
 	
 	// Create Label on the left side with the text
-	text_label = lv_label_create(lv_scr_act());
+	//text_label = lv_label_create(lv_scr_act());
 	sprintf(&text, "Data Size %u", st_bitmap_gadget.data_size);
-	lv_label_set_text(text_label, &text);
-	lv_obj_align(text_label, LV_ALIGN_TOP_LEFT, 10, 0);
-	
+	//lv_label_set_text(text_label, &text);
+	//lv_obj_align(text_label, LV_ALIGN_TOP_LEFT, 10, 0);
 
+	uint8_t text_id = graphics_draw_text(&text, 10,0);
+    int ret = graphics_set_font_size(text_id, 8);
+    if(ret != 0)
+    {
+        return;
+    }
 	// Create Image on the left side
-	image = lv_img_create(lv_scr_act());
-	lv_img_set_src(image, &st_bitmap_gadget);
+	//image = lv_img_create(lv_scr_act());
+	//lv_img_set_src(image, &st_bitmap_gadget);
+	uint8_t img = graphics_draw_image(&st_bitmap_gadget, 0, 32);
 	
-	lv_task_handler();
+    lv_task_handler();
 	display_blanking_off(display_dev);
-
+    
     while (1)
 	{
 		for(uint8_t i=0; i<128; i++)
         {
-            lv_obj_align(image, LV_ALIGN_TOP_LEFT, i, 32);
+            //lv_obj_align(image, LV_ALIGN_TOP_LEFT, i, 32);
+            graphics_move_object(img, i, 32);
             lv_task_handler();
-    		k_sleep(K_MSEC(100));
+    		k_sleep(K_MSEC(10));
         }
 	}
+    
 }
 
 uint8_t graphics_draw_image(lv_img_dsc_t *image_src, uint8_t x, uint8_t y)
@@ -110,10 +145,14 @@ uint8_t graphics_draw_image(lv_img_dsc_t *image_src, uint8_t x, uint8_t y)
             }
         }
     }
-    last_graphics_object_index = index;
     
-	lv_img_set_src(graphic_objects[index], image_src);
-    lv_obj_set_pos(graphic_objects[index], x, y);
+    if(MAX_GRAPHICS_OBJECTS != index)
+    {
+        lv_img_set_src(graphic_objects[index], image_src);
+        lv_obj_set_pos(graphic_objects[index], x, y);
+        last_graphics_object_index = index;
+    }
+
     return index;
 }
 
@@ -121,6 +160,7 @@ uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y)
 {
     bool free_index_found;
     uint8_t index = MAX_GRAPHICS_OBJECTS; 
+    index =0;
 
     for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
     {
@@ -132,6 +172,7 @@ uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y)
             break;
         }
     }
+
     if(MAX_GRAPHICS_OBJECTS == index)
     {
         for(uint8_t i=0; i<last_graphics_object_index ;i++)
@@ -146,24 +187,71 @@ uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y)
         }
     }
     
-	lv_label_set_text(graphic_objects[index], &text);
-    lv_obj_set_pos(graphic_objects[index], x, y);
+    if(MAX_GRAPHICS_OBJECTS != index)
+    {
+        lv_label_set_text(graphic_objects[index], text);
+        lv_obj_set_pos(graphic_objects[index], x, y);
+        last_graphics_object_index = index;
+    }
+   
     return index;
 }
 
-void graphics_move_object(uint8_t obj_id, uint8_t x, uint8_t y)
+
+int graphics_set_font_size(uint8_t obj_id, uint8_t size)
+{
+    if(graphic_objects[obj_id] != NULL)
+    {
+        if(((size % 2) != 0) || (size < 8) || (size > 48) || (graphic_objects[obj_id] == NULL))
+        {
+            return ENOENT;
+        }
+        else
+        {
+            lv_style_t style;
+            lv_style_init(&style);
+            
+            size -=8; // fonts start at 8
+            size >>=1;// fonts are always multiples of 2
+
+            lv_style_set_text_font(&style, &lv_font_montserrat_22); //fonts[size]);
+            lv_obj_add_style(graphic_objects[obj_id], &style, 0); 
+            
+            return 0;
+        }
+    }
+    else
+    {
+        return ENOENT;
+    }
+    
+}
+
+int graphics_move_object(uint8_t obj_id, uint8_t x, uint8_t y)
 {
     if(graphic_objects[obj_id] != NULL)
     {
         lv_obj_set_pos(graphic_objects[obj_id], x, y);
     }
+    else
+    {
+        return ENOTSUP;
+    }
+
+    return 0;
 }
 
-void graphics_delete_object(uint8_t obj_id)
+int graphics_delete_object(uint8_t obj_id)
 {
     if(graphic_objects[obj_id] != NULL)
     {
         lv_obj_del(graphic_objects[obj_id]);
         graphic_objects[obj_id] = NULL;
     }
+    else
+    {
+        return ENOTSUP;
+    }
+
+    return 0;
 }
