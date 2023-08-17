@@ -21,6 +21,7 @@
 
 #include "graphics.h"
 #include "controls.h"
+#include "game.h"
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
@@ -32,11 +33,16 @@ void main(void)
 
 	controls_init(false);
 	graphics_init();
-
+	//graphics_demo();
+	game_init();
+	controls_btn_states_t control_inputs;
 	while (1)
 	{
-		/* code */
-		k_sleep(K_SECONDS(1));
-		printk("Hello, world!");
+		controls_get_button_states(&control_inputs);
+		game_step(&control_inputs);
+		graphics_update_screen();
+
+		k_sleep(K_MSEC(25));
+		//printk("Hello, world!\n");
 	}
 }

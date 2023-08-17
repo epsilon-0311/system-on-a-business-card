@@ -15,4 +15,6 @@ target_include_directories(app PRIVATE ${CMAKE_BINARY_DIR}/app/include inc)
 
 target_sources(app PRIVATE src/controls.c)
 target_sources(app PRIVATE src/graphics.c)
+target_sources(app PRIVATE src/game.c)
+target_sources(app PRIVATE src/images.c)
 target_sources(app PRIVATE src/main.c)

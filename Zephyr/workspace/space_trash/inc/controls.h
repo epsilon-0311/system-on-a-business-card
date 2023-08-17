@@ -2,6 +2,8 @@
 #ifndef __SPACE_TRASH_CONTROLS_H__
 #define __SPACE_TRASH_CONTROLS_H__
 
+#include <inttypes.h>
+
 typedef struct btn_states
 {
     uint16_t btn_a:1;

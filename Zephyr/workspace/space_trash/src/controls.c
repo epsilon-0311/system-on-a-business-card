@@ -255,7 +255,7 @@ int controls_init(bool enable_interupts)
 
 void controls_get_button_states(controls_btn_states_t* states)
 {
-	if(interupts_enabled == true)
+	if(interupts_enabled == false)
 	{
 		states->btn_start   = gpio_pin_get(btn_start.port, btn_start.pin);
 		states->btn_select  = gpio_pin_get(btn_select.port, btn_select.pin);

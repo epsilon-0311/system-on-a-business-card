@@ -59,59 +59,90 @@ static const lv_font_t *fonts[] =
     &lv_font_montserrat_22,
 };
 
-void graphics_init(void)
+int graphics_init(void)
 {	
 	const struct device *display_dev;
-	char text[20];
+	
+	//display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
+	display_dev = DEVICE_DT_GET(ZEPHYR_DISPLAY);
+    int ret = device_is_ready(display_dev);
+    if (ret !=0 ) {
+		LOG_ERR("Device not ready, aborting test");
+		return ret;
+	}
+	
+    // initialize objects array
+    for(uint8_t i=0; i<MAX_GRAPHICS_OBJECTS ;i++)
+    {
+        graphic_objects[i] = NULL;
+    }
+
+    lv_task_handler();
+	display_blanking_off(display_dev);
+    return 0;
+}
+
+
+void graphics_get_screen_size(uint16_t *height, uint16_t*width)
+{
+    *height = DISPLAY_HEIGHT;
+    *width = DISPLAY_WIDTH;
+}
+
+void graphics_update_screen(void)
+{
+    lv_task_handler();
+}
+
+void graphics_demo(void)
+{
+    char text[20];
     char *text_ptr= (char *) &text;
 
 	lv_obj_t *text_label;
 	lv_obj_t *image;
-	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
-	if (!device_is_ready(display_dev)) {
-		LOG_ERR("Device not ready, aborting test");
-		return;
-	}
-	
-	// Create Label on the left side with the text
-	//text_label = lv_label_create(lv_scr_act());
-	sprintf(text_ptr, "Hello, World!");
-	//lv_label_set_text(text_label, &text);
-	//lv_obj_align(text_label, LV_ALIGN_TOP_LEFT, 10, 0);
 
+    // Create Label on the left side with the text
+	sprintf(text_ptr, "Hello, World!");
 	uint8_t text_id = graphics_draw_text(text_ptr, 10,0,12);
         
-	// Create Image on the left side
-	//image = lv_img_create(lv_scr_act());
-	//lv_img_set_src(image, &st_bitmap_gadget);
-	uint8_t img = graphics_draw_image(&st_bitmap_gadget, 0, 48);
+	// Create Image 
+    int16_t x=0,y=32;
+	uint8_t img = graphics_draw_image(&st_bitmap_gadget, x, y);
 	
-    lv_task_handler();
-	display_blanking_off(display_dev);
     
     k_sleep(K_MSEC(1000));
-    int8_t y_diff=1;
+    int16_t y_diff=1, x_diff=1;
+    uint8_t i=0;
     while (1)
 	{
-		for(uint8_t i=0; i<128; i++)
+        graphics_move_object(img, x_diff, y_diff, true);
+
+        graphics_get_object_position(img,&x,&y);
+        sprintf(text_ptr, "x:%i y:%i", x,y);
+        graphics_set_text(text_id, text_ptr);
+        
+        graphics_update_screen();
+
+        k_sleep(K_MSEC(10));
+        i++;
+        
+        if(i==128)
         {
-            //lv_obj_align(image, LV_ALIGN_TOP_LEFT, i, 32);
-            sprintf(text_ptr, "X-Positon: %u", i);
-            graphics_set_text(text_id, text_ptr);
-            
-            graphics_move_object(img, -1, y_diff, true);
-            lv_task_handler();
-    		k_sleep(K_MSEC(10));
+            y_diff = -y_diff;   
         }
-        y_diff = -y_diff;   
+        if(i==0)
+        {
+            x_diff = -x_diff;   
+        }
 	}
-    
 }
 
-uint8_t graphics_draw_image(lv_img_dsc_t *image_src, uint8_t x, uint8_t y)
+uint8_t graphics_draw_image(const lv_img_dsc_t *image, int16_t x, int16_t y)
 {
     bool free_index_found;
     uint8_t index = MAX_GRAPHICS_OBJECTS; 
+    lv_img_dsc_t *image_src = (lv_img_dsc_t *) image;
 
     for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
     {
@@ -145,11 +176,11 @@ uint8_t graphics_draw_image(lv_img_dsc_t *image_src, uint8_t x, uint8_t y)
     return index;
 }
 
-uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y, uint8_t font_size)
+uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_size)
 {
     bool free_index_found;
     uint8_t index = MAX_GRAPHICS_OBJECTS; 
-    index =0;
+    
     if((font_size < 8) || (font_size > 22))
     {
         return MAX_GRAPHICS_OBJECTS;
@@ -195,6 +226,46 @@ uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y, uint8_t font_size)
     return index;
 }
 
+uint8_t graphics_draw_line(const lv_point_t* points, uint8_t num_points, uint8_t line_width)
+{
+    bool free_index_found;
+    uint8_t index = MAX_GRAPHICS_OBJECTS; 
+
+    for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
+    {
+        if(graphic_objects[i] == NULL)
+        {
+            graphic_objects[i] = lv_line_create(lv_scr_act());
+            index=i;
+            last_graphics_object_index = index;
+            break;
+        }
+    }
+
+    if(MAX_GRAPHICS_OBJECTS == index)
+    {
+        for(uint8_t i=0; i<last_graphics_object_index ;i++)
+        {
+            if(graphic_objects[i] == NULL)
+            {
+                graphic_objects[i] = lv_line_create(lv_scr_act());
+                index=i;
+                last_graphics_object_index = index;
+                break;
+            }
+        }
+    }
+
+
+    if(MAX_GRAPHICS_OBJECTS != index)
+    {
+        lv_line_set_points(graphic_objects[index], points, num_points);
+        lv_obj_set_style_line_width(graphic_objects[index], line_width,0);
+        last_graphics_object_index = index;
+    }
+   
+    return index;
+}
 
 int graphics_set_font_size(uint8_t obj_id, uint8_t size)
 {
@@ -234,7 +305,7 @@ int graphics_set_text(uint8_t obj_id, char *text)
     return 0;
 }
 
-int graphics_move_object(uint8_t obj_id, int8_t offset_x, int8_t offset_y, bool wrap_around)
+int graphics_move_object(uint8_t obj_id, int16_t offset_x, int16_t offset_y, bool wrap_around)
 {
     if(graphic_objects[obj_id] != NULL)
     {
@@ -272,7 +343,22 @@ int graphics_move_object(uint8_t obj_id, int8_t offset_x, int8_t offset_y, bool 
     return 0;
 }
 
-int graphics_set_object_position(uint8_t obj_id, uint8_t x, uint8_t y)
+int graphics_set_alignment(uint8_t obj_id, lv_align_t align)
+{
+
+     if(graphic_objects[obj_id] != NULL)
+    {
+        lv_obj_set_align(graphic_objects[obj_id], align);
+    }
+    else
+    {
+        return ENOTSUP;
+    }
+
+    return 0;
+}
+
+int graphics_set_object_position(uint8_t obj_id, int16_t x, int16_t y)
 {
     if(graphic_objects[obj_id] != NULL)
     {
@@ -285,6 +371,22 @@ int graphics_set_object_position(uint8_t obj_id, uint8_t x, uint8_t y)
 
     return 0;
 }
+
+int graphics_get_object_position(uint8_t obj_id, int16_t *x, int16_t *y)
+{
+    if(graphic_objects[obj_id] != NULL)
+    {
+        (*x) = lv_obj_get_x(graphic_objects[obj_id]);
+        (*y) = lv_obj_get_y(graphic_objects[obj_id]);
+    }
+    else
+    {
+        return ENOTSUP;
+    }
+
+    return 0;
+}
+
 
 int graphics_delete_object(uint8_t obj_id)
 {

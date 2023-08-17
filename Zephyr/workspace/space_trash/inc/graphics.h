@@ -10,19 +10,31 @@
     #define MAX_GRAPHICS_OBJECTS 50
 #endif
 
-void graphics_init(void);
+int graphics_init(void);
 
-uint8_t graphics_draw_image(lv_img_dsc_t *image_src, uint8_t x, uint8_t y);
+void graphics_get_screen_size(uint16_t *height, uint16_t*width);
 
-uint8_t graphics_draw_text(char *text, uint8_t x, uint8_t y, uint8_t font_size);
+void graphics_update_screen(void);
+
+void graphics_demo(void);
+
+uint8_t graphics_draw_image(const lv_img_dsc_t *image, int16_t x, int16_t y);
+
+uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_size);
+
+uint8_t graphics_draw_line(const lv_point_t* points, uint8_t num_points, uint8_t line_width);
 
 int graphics_set_font_size(uint8_t obj_id, uint8_t size);
 
 int graphics_set_text(uint8_t obj_id, char *text);
 
-int graphics_move_object(uint8_t obj_id, int8_t offset_x, int8_t offset_y, bool wrap_around);
+int graphics_move_object(uint8_t obj_id, int16_t offset_x, int16_t offset_y, bool wrap_around);
 
-int graphics_set_object_position(uint8_t obj_id, uint8_t x, uint8_t y);
+int graphics_set_alignment(uint8_t obj_id, lv_align_t align);
+
+int graphics_set_object_position(uint8_t obj_id, int16_t x, int16_t y);
+
+int graphics_get_object_position(uint8_t obj_id, int16_t *x, int16_t *y);
 
 int graphics_delete_object(uint8_t obj_id);
 
