@@ -141,7 +141,7 @@ void graphics_demo(void)
 uint8_t graphics_draw_image(const lv_img_dsc_t *image, int16_t x, int16_t y)
 {
     bool free_index_found;
-    uint8_t index = MAX_GRAPHICS_OBJECTS; 
+    uint8_t index = 0xFF; 
     lv_img_dsc_t *image_src = (lv_img_dsc_t *) image;
 
     for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
@@ -153,7 +153,7 @@ uint8_t graphics_draw_image(const lv_img_dsc_t *image, int16_t x, int16_t y)
             break;
         }
     }
-    if(MAX_GRAPHICS_OBJECTS == index)
+    if(0xFF == index)
     {
         for(uint8_t i=0; i<last_graphics_object_index ;i++)
         {
@@ -166,7 +166,7 @@ uint8_t graphics_draw_image(const lv_img_dsc_t *image, int16_t x, int16_t y)
         }
     }
     
-    if(MAX_GRAPHICS_OBJECTS != index)
+    if(0xFF != index)
     {
         lv_img_set_src(graphic_objects[index], image_src);
         lv_obj_set_pos(graphic_objects[index], x, y);
@@ -179,11 +179,11 @@ uint8_t graphics_draw_image(const lv_img_dsc_t *image, int16_t x, int16_t y)
 uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_size)
 {
     bool free_index_found;
-    uint8_t index = MAX_GRAPHICS_OBJECTS; 
+    uint8_t index = 0xFF; 
     
     if((font_size < 8) || (font_size > 22))
     {
-        return MAX_GRAPHICS_OBJECTS;
+        return 0xFF;
     }
 
     for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
@@ -197,7 +197,7 @@ uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_
         }
     }
 
-    if(MAX_GRAPHICS_OBJECTS == index)
+    if(0xFF == index)
     {
         for(uint8_t i=0; i<last_graphics_object_index ;i++)
         {
@@ -212,7 +212,7 @@ uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_
     }
 
 
-    if(MAX_GRAPHICS_OBJECTS != index)
+    if(0xFF != index)
     {
         font_size -=8; // fonts start at 8
         font_size >>=1;// fonts are always multiples of 2
@@ -229,7 +229,7 @@ uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_
 uint8_t graphics_draw_line(const lv_point_t* points, uint8_t num_points, uint8_t line_width)
 {
     bool free_index_found;
-    uint8_t index = MAX_GRAPHICS_OBJECTS; 
+    uint8_t index = 0xFF; 
 
     for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
     {
@@ -242,7 +242,7 @@ uint8_t graphics_draw_line(const lv_point_t* points, uint8_t num_points, uint8_t
         }
     }
 
-    if(MAX_GRAPHICS_OBJECTS == index)
+    if(0xFF == index)
     {
         for(uint8_t i=0; i<last_graphics_object_index ;i++)
         {
@@ -257,7 +257,7 @@ uint8_t graphics_draw_line(const lv_point_t* points, uint8_t num_points, uint8_t
     }
 
 
-    if(MAX_GRAPHICS_OBJECTS != index)
+    if(0xFF != index)
     {
         lv_line_set_points(graphic_objects[index], points, num_points);
         lv_obj_set_style_line_width(graphic_objects[index], line_width,0);
@@ -387,6 +387,21 @@ int graphics_get_object_position(uint8_t obj_id, int16_t *x, int16_t *y)
     return 0;
 }
 
+
+int graphics_get_object_dimensions(uint8_t obj_id, int16_t *height, int16_t *width)
+{
+    if(graphic_objects[obj_id] != NULL)
+    {
+        (*height) = lv_obj_get_height(graphic_objects[obj_id]);
+        (*width)  = lv_obj_get_width(graphic_objects[obj_id]);
+    }
+    else
+    {
+        return ENOTSUP;
+    }
+
+    return 0;
+}
 
 int graphics_delete_object(uint8_t obj_id)
 {

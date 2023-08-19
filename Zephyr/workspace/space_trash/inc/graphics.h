@@ -36,6 +36,8 @@ int graphics_set_object_position(uint8_t obj_id, int16_t x, int16_t y);
 
 int graphics_get_object_position(uint8_t obj_id, int16_t *x, int16_t *y);
 
+int graphics_get_object_dimensions(uint8_t obj_id, int16_t *height, int16_t *width);
+
 int graphics_delete_object(uint8_t obj_id);
 
 void graphics_delete_all_objects(void);

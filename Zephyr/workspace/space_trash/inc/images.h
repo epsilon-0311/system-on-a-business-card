@@ -11,5 +11,6 @@ extern const lv_img_dsc_t st_bitmap_trash_5x5_2;
 extern const lv_img_dsc_t st_bitmap_trash_7x7;
 
 extern const lv_img_dsc_t st_bitmap_gadget;
+extern const lv_img_dsc_t st_bitmap_missile;
 
 #endif

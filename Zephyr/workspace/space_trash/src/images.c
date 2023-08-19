@@ -142,19 +142,41 @@ const uint8_t bitmap_gadget[] =
 { 
   0x00, 0x00, 0x00, 0x00, 	/*Color of index 0: */
   0xff, 0xff, 0xff, 0xff, 	/*Color of index 1: */
-  /* 01110000 */ 0x070,
-  /* 11011000 */ 0x0d8,
-  /* 10001000 */ 0x088,
-  /* 11011000 */ 0x0d8,
-  /* 01110000 */ 0x070,
+  /* 00111000 */ 0x38,
+  /* 01010100 */ 0x54,
+  /* 10010010 */ 0x92,
+  /* 11111110 */ 0xFE,
+  /* 10010010 */ 0x92,
+  /* 01010100 */ 0x54, 
+  /* 00111000 */ 0x38,
 };
 
 const lv_img_dsc_t st_bitmap_gadget = {
   .header.reserved = 0,
   .header.always_zero = 0,
-  .header.w = 5,
-  .header.h = 5,
+  .header.w = 7,
+  .header.h = 7,
   .header.cf = LV_IMG_CF_INDEXED_1BIT,
-  .data_size = 13,
+  .data_size = 15,
   .data = bitmap_gadget,
 };
+
+const uint8_t bitmap_missile[] = 
+{ 
+  0x00, 0x00, 0x00, 0x00, 	/*Color of index 0: */
+  0xff, 0xff, 0xff, 0xff, 	/*Color of index 1: */
+  /* 11000000 */ 0xC0,
+  /* 01111000 */ 0x78,
+  /* 11001000 */ 0xC0,
+};
+
+const lv_img_dsc_t st_bitmap_missile = {
+  .header.reserved = 0,
+  .header.always_zero = 0,
+  .header.w = 5,
+  .header.h = 3,
+  .header.cf = LV_IMG_CF_INDEXED_1BIT,
+  .data_size = 11,
+  .data = bitmap_missile,
+};
+
