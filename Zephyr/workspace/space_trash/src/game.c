@@ -102,7 +102,7 @@ void game_init(void)
     for(uint8_t i=0; i<SCORE_BOARD_ENTRIES; i++)
     {
         score_board_scores[i]=0x0;
-        core_board_names[i][0]='\0';
+        score_board_names[i][0]='\0';
     }
 }
 
