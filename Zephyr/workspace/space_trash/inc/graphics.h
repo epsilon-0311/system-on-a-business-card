@@ -24,6 +24,10 @@ uint8_t graphics_draw_text(const char *text, int16_t x, int16_t y, uint8_t font_
 
 uint8_t graphics_draw_line(const lv_point_t* points, uint8_t num_points, uint8_t line_width);
 
+uint8_t graphics_create_text_area( int16_t x, int16_t y, uint16_t height, uint8_t max_length, uint8_t font_size);
+
+uint8_t graphics_text_input_screen( int16_t x, int16_t y, uint16_t height, uint8_t ta_obj_id, void (*cb_func)(const char *));
+
 int graphics_set_font_size(uint8_t obj_id, uint8_t size);
 
 int graphics_set_text(uint8_t obj_id, char *text);

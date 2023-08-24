@@ -52,12 +52,12 @@ static lv_color_t white;
 static lv_obj_t *graphic_objects[MAX_GRAPHICS_OBJECTS];
 static uint8_t last_graphics_object_index=0;
 
+static lv_indev_drv_t keypad_indev_drv;
 static lv_indev_t * keypad_indev;
 static lv_group_t * keypad_group;
+static lv_obj_t *kb;
 
 static void (*texinpunt_done_cb_func)(const char *);
-
-static bool delete_indev;
 
 static const char * const kb_map_lc[] = {"#1", "q", "w", "e", "r", "t", "z",  "u", "i", "o", "p", LV_SYMBOL_BACKSPACE, "\n",
                                             "ABC", "a", "s", "d", "f", "g", "h", "j", "k", "l", LV_SYMBOL_OK, "\n",
@@ -99,7 +99,7 @@ static const lv_font_t *fonts[] =
     &lv_font_montserrat_22,
 };
 
-static lv_obj_t *kb;
+//static lv_obj_t *kb;
 
 int graphics_init(void)
 {	
@@ -107,7 +107,7 @@ int graphics_init(void)
 	
     /*
 	//display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
-    display_dev = DEVICE_DT_GET(ZEPHYR_DISPLAY);
+    display_dev = DEVICE_DT_GET(ZEPHYR_DISPLAY);ss
     int ret = device_is_ready(display_dev);
     if (ret !=0 ) {
 		LOG_ERR("Device not ready, aborting test");
@@ -122,13 +122,12 @@ int graphics_init(void)
     }
 
 
-    lv_indev_drv_t key_pad_indev_drv;
-    lv_indev_drv_init(&key_pad_indev_drv);     
-    key_pad_indev_drv.type =LV_INDEV_TYPE_KEYPAD;
-    key_pad_indev_drv.read_cb = &indev_keypad_callback;
+    lv_indev_drv_init(&keypad_indev_drv);     
+    keypad_indev_drv.type =LV_INDEV_TYPE_KEYPAD;
+    keypad_indev_drv.read_cb = &indev_keypad_callback;
     //Register the driver in LVGL and save the created input device object
-    keypad_indev = lv_indev_drv_register(&key_pad_indev_drv);
-
+    keypad_indev = lv_indev_drv_register(&keypad_indev_drv);
+    lv_indev_enable(keypad_indev, false);
 
     keypad_group = lv_group_create();
     lv_indev_set_group(keypad_indev, keypad_group);
@@ -155,8 +154,17 @@ static void indev_keypad_callback(lv_indev_drv_t * drv, lv_indev_data_t*data)
 
     static uint32_t last_btn = 0;   /*Store the last pressed button*/
     static uint8_t pressed=0;
-
+   
+    if(kb == NULL)
+    {
+        return;
+    }
+    
     lv_obj_t *ta =  lv_keyboard_get_textarea(kb);
+    if(ta == NULL)
+    {
+        return;
+    }
 
     controls_btn_states_t button_states;
     controls_get_button_states(&button_states);
@@ -200,7 +208,6 @@ static void indev_keypad_callback(lv_indev_drv_t * drv, lv_indev_data_t*data)
                     (*texinpunt_done_cb_func)(lv_textarea_get_text(ta));
                 }
                 lv_indev_enable(keypad_indev, false);
-                delete_indev=true;
             }
             else if(strncmp(btn_text, LV_SYMBOL_BACKSPACE, 3) == 0)
             {
@@ -292,10 +299,7 @@ void graphics_demo(void)
 	}
     */
 
-
-    delete_indev = false;
     
-    /*
     //Create a text area. The keyboard will write here
     lv_obj_t *ta = lv_textarea_create(lv_scr_act());
     lv_obj_set_pos(ta, 0,-5);
@@ -306,8 +310,7 @@ void graphics_demo(void)
     lv_textarea_set_max_length(ta, 10);
     lv_obj_set_style_text_font(ta, fonts[1], 0);
 
-    lv_textarea_set_text(ta, "");
-
+    lv_textarea_set_text(ta, "asdf");
     kb = lv_keyboard_create(lv_scr_act());
     lv_keyboard_set_map(kb,LV_KEYBOARD_MODE_TEXT_LOWER, &kb_map_lc, &kb_ctrl_nap_text);
     lv_keyboard_set_map(kb,LV_KEYBOARD_MODE_TEXT_UPPER, &kb_map_uc, &kb_ctrl_nap_text);
@@ -322,13 +325,17 @@ void graphics_demo(void)
 
     lv_group_add_obj(keypad_group, kb);
 
+    /*
+    lv_indev_enable(keypad_indev, true);
+    */
+
     while (1)
     {
         graphics_update_screen();
 
 		k_sleep(K_MSEC(25));       
     }
-   */
+   
 }
 
 uint8_t graphics_create_text_area( int16_t x, int16_t y, uint16_t height, uint8_t max_length, uint8_t font_size)
@@ -367,8 +374,6 @@ uint8_t graphics_create_text_area( int16_t x, int16_t y, uint16_t height, uint8_
         font_size -=8; // fonts start at 8
         font_size >>=1;// fonts are always multiples of 2
 
-        // lv_obj_set_pos(graphic_objects[index], 0,-5);
-
         lv_obj_set_height(graphic_objects[index], height);
         lv_textarea_set_one_line(graphic_objects[index], true);
         lv_textarea_set_max_length(graphic_objects[index], max_length);
@@ -378,6 +383,7 @@ uint8_t graphics_create_text_area( int16_t x, int16_t y, uint16_t height, uint8_
         
         lv_obj_set_pos(graphic_objects[index], x,y);
         
+
         last_graphics_object_index = index;
     }
 
@@ -418,18 +424,23 @@ uint8_t graphics_text_input_screen( int16_t x, int16_t y, uint16_t height, uint8
     if(0xFF != index)
     {
         lv_obj_set_style_text_font(graphic_objects[index], fonts[1], 0); 
+        //lv_obj_set_pos(graphic_objects[index], 0,10);
+        lv_obj_align(graphic_objects[index], LV_ALIGN_OUT_TOP_LEFT, x, y);
+        lv_obj_set_height(graphic_objects[index],  height);  
+        
         lv_keyboard_set_map(graphic_objects[index],LV_KEYBOARD_MODE_TEXT_LOWER, (const char **) &kb_map_lc,  (const lv_btnmatrix_ctrl_t *) &kb_ctrl_nap_text);
         lv_keyboard_set_map(graphic_objects[index],LV_KEYBOARD_MODE_TEXT_UPPER, (const char **) &kb_map_uc,  (const lv_btnmatrix_ctrl_t *)&kb_ctrl_nap_text);
         lv_keyboard_set_map(graphic_objects[index],LV_KEYBOARD_MODE_NUMBER,     (const char **) &kb_map_num, (const lv_btnmatrix_ctrl_t *)&kb_ctrl_map_num);
         
-        lv_keyboard_set_mode(kb,LV_KEYBOARD_MODE_TEXT_UPPER);
-
-        lv_obj_set_pos(graphic_objects[index], x,y);
-        lv_obj_set_height(graphic_objects[index],  height);  
+        lv_keyboard_set_mode(graphic_objects[index],LV_KEYBOARD_MODE_TEXT_UPPER);
 
         lv_keyboard_set_textarea(graphic_objects[index], graphic_objects[ta_obj_id]);
-    
+
+        kb = graphic_objects[index];
+        texinpunt_done_cb_func=cb_func;
+
         lv_group_add_obj(keypad_group, graphic_objects[index]);
+        lv_indev_enable(keypad_indev, true);
 
         last_graphics_object_index = index;
     }
@@ -706,6 +717,12 @@ int graphics_delete_object(uint8_t obj_id)
 {
     if(graphic_objects[obj_id] != NULL)
     {
+        if(kb == graphic_objects[obj_id])
+        {
+            kb = NULL;
+            texinpunt_done_cb_func = NULL;
+        }
+
         lv_obj_del(graphic_objects[obj_id]);
         graphic_objects[obj_id] = NULL;
     }
@@ -723,6 +740,12 @@ void graphics_delete_all_objects(void)
     {
         if(graphic_objects[i] != NULL)
         {
+            if(kb == graphic_objects[i])
+            {
+                kb = NULL;
+                texinpunt_done_cb_func = NULL;
+            }
+        
             lv_obj_del(graphic_objects[i]);
             graphic_objects[i] = NULL;
         }

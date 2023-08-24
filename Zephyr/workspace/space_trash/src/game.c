@@ -161,12 +161,14 @@ void game_step(controls_btn_states_t *control_inputs)
         case GAME_STATE_POST_RUN:
             // enter name for new score entry
             input_name(control_inputs);
-            if(control_inputs->btn_start == 1)
-            {
-                state = GAME_STATE_SCORE_BOARD;
-            }
+            state = GAME_STATE_PRE_SCORE_BOARD;
+            break;
+        case GAME_STATE_PRE_SCORE_BOARD:
+            // state change is done in cb function
             break;
         case GAME_STATE_SCORE_BOARD:
+             graphics_delete_all_objects();
+                
             // show scoreboard until start is pressed
             show_score_board(control_inputs);
             if(control_inputs->btn_start == 1)
@@ -476,10 +478,36 @@ static int handle_colisions(void)
     return 0;
 }
 
+static void submit_name(const char *name)
+{
+
+    for(uint8_t i=0; i < SCORE_BOARD_ENTRIES; i++ )
+    {
+        if(current_score > score_board_scores[i])
+        {
+            for(uint8_t j=SCORE_BOARD_ENTRIES-1; j > i; j-- )
+            {
+                score_board_scores[j] = score_board_scores[j-1];
+                if(score_board_scores[j] > 0 )
+                {
+                    strncpy(&score_board_names[j],&score_board_names[j-1], SCORE_BOARD_MAX_NAME_LENGTH);
+                }
+            }
+            score_board_scores[i] = current_score;
+            strncpy(&score_board_names[i],name, SCORE_BOARD_MAX_NAME_LENGTH);
+            break;
+        }
+    }
+
+    state = GAME_STATE_SCORE_BOARD;
+}
+
 static void input_name(controls_btn_states_t *control_inputs)
 {
-    uint8_t start=graphics_draw_text("Enter Name:", 0, 0, 16);
-    
+    uint8_t name_lbl=graphics_draw_text("Name:", 0, 5, 10);
+    uint8_t text_area=graphics_create_text_area(32, -5, 10, SCORE_BOARD_MAX_NAME_LENGTH, 10);
+    uint8_t keyboard=graphics_text_input_screen(0, 24, 44, text_area, &submit_name);
+
     return;
 }
 

@@ -51,6 +51,7 @@ typedef enum{
     GAME_STATE_PRE_RUN,
     GAME_STATE_RUN,
     GAME_STATE_POST_RUN,
+    GAME_STATE_PRE_SCORE_BOARD,
     GAME_STATE_SCORE_BOARD,
 } game_state_t;
 
