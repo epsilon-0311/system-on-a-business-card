@@ -254,6 +254,47 @@ static void indev_keypad_callback(lv_indev_drv_t * drv, lv_indev_data_t*data)
     last_btn = data->key;
 }
 
+static void draw_part_event_cb(lv_event_t * e)
+{
+    lv_obj_t * obj = lv_event_get_target(e);
+    lv_obj_draw_part_dsc_t * dsc = lv_event_get_param(e);
+    /*If the cells are drawn...*/
+    if(dsc->part == LV_PART_ITEMS) {
+        
+        uint32_t row = dsc->id /  lv_table_get_col_cnt(obj);
+        uint32_t col = dsc->id - row * lv_table_get_col_cnt(obj);
+
+        if(col == 1) {
+            dsc->label_dsc->align = LV_TEXT_ALIGN_RIGHT;
+        }
+        else
+        {
+            dsc->label_dsc->align = LV_TEXT_ALIGN_LEFT;
+        }
+        //dsc->label_dsc->font=fonts[1];
+    
+
+        /*
+        //Make the texts in the first cell center aligned
+        if(row == 0) {
+            dsc->label_dsc->align = LV_TEXT_ALIGN_CENTER;
+            dsc->rect_dsc->bg_color = lv_color_mix(lv_palette_main(LV_PALETTE_BLUE), dsc->rect_dsc->bg_color, LV_OPA_20);
+            dsc->rect_dsc->bg_opa = LV_OPA_COVER;
+        }
+        //In the first column align the texts to the right
+        else 
+
+        //Ake every 2nd row grayish
+        if((row != 0 && row % 2) == 0) {
+            dsc->rect_dsc->bg_color = lv_color_mix(lv_palette_main(LV_PALETTE_GREY), dsc->rect_dsc->bg_color, LV_OPA_10);
+            dsc->rect_dsc->bg_opa = LV_OPA_COVER;
+        }
+        */
+    }
+}
+
+
+
 void graphics_demo(void)
 {
     char text[20];
@@ -299,7 +340,7 @@ void graphics_demo(void)
 	}
     */
 
-    
+    /*
     //Create a text area. The keyboard will write here
     lv_obj_t *ta = lv_textarea_create(lv_scr_act());
     lv_obj_set_pos(ta, 0,-5);
@@ -325,10 +366,50 @@ void graphics_demo(void)
 
     lv_group_add_obj(keypad_group, kb);
 
-    /*
     lv_indev_enable(keypad_indev, true);
     */
+    
+    lv_obj_t * table = lv_table_create(lv_scr_act());
+    //lv_table_set_row_cnt(table, 2);
+    //lv_table_set_col_cnt(table, 2);
+    lv_table_set_col_width(table, 0, 63);
+    lv_table_set_col_width(table, 1, 63);
 
+    uint32_t test_val = 0xFFFFFFFF;
+    char test_text[20];
+    sprintf(&test_text, "%u", test_val);
+    /*Fill the first column*/
+    lv_table_set_cell_value(table, 0, 0, "0123456789");
+    lv_table_set_cell_value(table, 1, 0, test_text);
+    //lv_table_set_cell_value(table, 2, 0, "Banana");
+    //lv_table_set_cell_value(table, 3, 0, "Lemon");
+    //lv_table_set_cell_value(table, 4, 0, "Grape");
+    /*
+    */
+
+    /*Fill the second column*/
+    lv_table_set_cell_value(table, 0, 1, "Price");
+    lv_table_set_cell_value(table, 1, 1, test_text);
+    //lv_table_set_cell_value(table, 2, 1, "$4");
+    //lv_table_set_cell_value(table, 3, 1, "$6");
+    //lv_table_set_cell_value(table, 4, 1, "$2");
+
+    /*Set a smaller height to the table. It'll make it scrollable*/
+    //lv_obj_set_height(table,32);
+    //lv_obj_set_width(table, 128);
+    lv_obj_set_style_pad_ver(table, 0, LV_PART_ITEMS);
+    lv_obj_set_style_pad_hor(table, 0, LV_PART_ITEMS);
+    lv_obj_set_style_text_font(table, fonts[1], 0);
+    lv_obj_set_size(table, LV_SIZE_CONTENT,32);
+    //lv_obj_set_size(table, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_set_pos(table,0,0);
+        
+       
+    //lv_obj_center(table);
+
+    /*Add an event callback to to apply some custom drawing*/
+    lv_obj_add_event_cb(table, draw_part_event_cb, LV_EVENT_DRAW_PART_BEGIN, NULL);
+    
     while (1)
     {
         graphics_update_screen();
@@ -336,6 +417,86 @@ void graphics_demo(void)
 		k_sleep(K_MSEC(25));       
     }
    
+}
+
+
+uint8_t graphics_draw_table(int16_t x, int16_t y, uint16_t width, uint16_t height, uint8_t row_cnt, uint8_t column_cnt, uint16_t * col_widths,  uint8_t font_size)
+{
+
+    uint8_t index = 0xFF; 
+
+    if((font_size < 8) || (font_size > 22))
+    {
+        return 0xFF;
+    }
+
+    for(uint8_t i=last_graphics_object_index; i<MAX_GRAPHICS_OBJECTS;i++)
+    {
+        if(graphic_objects[i] == NULL)
+        {
+            graphic_objects[i] = lv_table_create(lv_scr_act());
+            index=i;
+            break;
+        }
+    }
+    if(0xFF == index)
+    {
+        for(uint8_t i=0; i<last_graphics_object_index ;i++)
+        {
+            if(graphic_objects[i] == NULL)
+            {
+                graphic_objects[i] = lv_table_create(lv_scr_act());
+                index=i;
+                break;
+            }
+        }
+
+    }
+
+    if(0xFF != index)
+    {
+        font_size -=8; // fonts start at 8
+        font_size >>=1;// fonts are always multiples of 2
+
+        lv_table_set_row_cnt(graphic_objects[index], row_cnt);
+        lv_table_set_col_cnt(graphic_objects[index], column_cnt);
+
+        lv_obj_set_style_pad_ver(graphic_objects[index], 0, LV_PART_ITEMS);
+        lv_obj_set_style_pad_hor(graphic_objects[index], 0, LV_PART_ITEMS);
+        lv_obj_set_style_text_font(graphic_objects[index], fonts[font_size], 0);
+        //lv_obj_set_size(graphic_objects[index], width,height);
+        lv_obj_set_pos(graphic_objects[index],x,y);
+        lv_obj_set_size(graphic_objects[index], LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+
+        if(col_widths != NULL)
+        {
+            for(uint8_t i=0; i<column_cnt; i++)
+            {
+                lv_table_set_col_width(graphic_objects[index], i, col_widths[i]);
+            }
+        }
+
+    }
+
+    return index;
+}
+
+int graphics_table_set_cell_value(uint8_t graphics_obj_id, uint16_t row, uint16_t col, char *text)
+{
+    if(graphic_objects[graphics_obj_id] == NULL ||
+      text == NULL || 
+      lv_table_get_row_cnt(graphic_objects[graphics_obj_id])  <= row ||
+      lv_table_get_col_cnt(graphic_objects[graphics_obj_id])  <= col 
+      )
+    {
+        return ENOENT;
+    }
+    else
+    {
+        lv_table_set_cell_value(graphic_objects[graphics_obj_id], row, col,text);
+    }
+
+    return 0;
 }
 
 uint8_t graphics_create_text_area( int16_t x, int16_t y, uint16_t height, uint8_t max_length, uint8_t font_size)

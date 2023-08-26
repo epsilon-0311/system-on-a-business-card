@@ -28,7 +28,7 @@ LOG_MODULE_REGISTER(game, LOG_LEVEL_DBG);
 static void show_start_screen(void);
 static void show_game_screen(void);
 static int handle_game_run(controls_btn_states_t *control_inputs);
-static void input_name(controls_btn_states_t *control_inputs);
+static void input_name(void);
 static void show_score_board(controls_btn_states_t *control_inputs);
 static void handle_trash(void);
 static void handle_missiles(uint8_t fire_shot);
@@ -116,6 +116,7 @@ void game_step(controls_btn_states_t *control_inputs)
             state = GAME_STATE_START;
             break;
         case GAME_STATE_START:
+            graphics_delete_all_objects();
             show_start_screen();
             state = GAME_STATE_PRE_RUN;
             break;
@@ -150,6 +151,7 @@ void game_step(controls_btn_states_t *control_inputs)
                 graphics_delete_all_objects();
                 if(current_score > score_board_scores[SCORE_BOARD_ENTRIES-1])
                 {
+                    input_name();
                     state = GAME_STATE_POST_RUN;
                 }
                 else
@@ -160,17 +162,17 @@ void game_step(controls_btn_states_t *control_inputs)
             break;
         case GAME_STATE_POST_RUN:
             // enter name for new score entry
-            input_name(control_inputs);
-            state = GAME_STATE_PRE_SCORE_BOARD;
+            //state = GAME_STATE_PRE_SCORE_BOARD;
             break;
         case GAME_STATE_PRE_SCORE_BOARD:
             // state change is done in cb function
+            graphics_delete_all_objects();
+            show_score_board(control_inputs);
+            state = GAME_STATE_SCORE_BOARD;
             break;
         case GAME_STATE_SCORE_BOARD:
-             graphics_delete_all_objects();
                 
             // show scoreboard until start is pressed
-            show_score_board(control_inputs);
             if(control_inputs->btn_start == 1)
             {
                 state = GAME_STATE_START;
@@ -187,12 +189,15 @@ static void show_start_screen(void)
     char *high_score_text_ptr = (char *)&high_score_text[0];
 
     // set title
-    uint8_t title=graphics_draw_text("Space Trash", 0, 1, 20);
+    uint8_t title=graphics_draw_text("Space Trash", 0, 0, 20);
+    graphics_set_alignment(title, LV_TEXT_ALIGN_CENTER);
     // display high score
-    sprintf( high_score_text_ptr,"High Score: %u", high_score);
-    uint8_t high_score_label =graphics_draw_text(high_score_text_ptr, 10, 25, 10);  
+    sprintf( high_score_text_ptr,"High Score: %u", score_board_scores[0]);
+    uint8_t high_score_label =graphics_draw_text(high_score_text_ptr, 0, 25, 10);  
+    graphics_set_alignment(high_score_label, LV_TEXT_ALIGN_CENTER);
     // set title
-    uint8_t start=graphics_draw_text("Press Start!", 20, 40, 16);
+    uint8_t start=graphics_draw_text("Press Start!", 0, 40, 16);
+    graphics_set_alignment(start, LV_TEXT_ALIGN_CENTER);
     
     return;
 }
@@ -278,7 +283,7 @@ static void handle_missiles(uint8_t fire_shot)
         {
             if(missiles[i]==0xFF)
             {
-                missiles[i] = graphics_draw_image(&st_bitmap_missile, current_player_postion_x+7, current_player_postion_y);
+                missiles[i] = graphics_draw_image(&st_bitmap_missile, current_player_postion_x+7, current_player_postion_y+1);
                 // check if missile was created
                 if(missiles[i] != 0xFF)
                 {
@@ -493,16 +498,18 @@ static void submit_name(const char *name)
                     strncpy(&score_board_names[j],&score_board_names[j-1], SCORE_BOARD_MAX_NAME_LENGTH);
                 }
             }
+
             score_board_scores[i] = current_score;
             strncpy(&score_board_names[i],name, SCORE_BOARD_MAX_NAME_LENGTH);
+            LOG_DBG("New Score at %u: %s - %u\n", i+1,  &score_board_names[i],  score_board_scores[i]);
             break;
         }
     }
 
-    state = GAME_STATE_SCORE_BOARD;
+    state = GAME_STATE_PRE_SCORE_BOARD;
 }
 
-static void input_name(controls_btn_states_t *control_inputs)
+static void input_name(void)
 {
     uint8_t name_lbl=graphics_draw_text("Name:", 0, 5, 10);
     uint8_t text_area=graphics_create_text_area(32, -5, 10, SCORE_BOARD_MAX_NAME_LENGTH, 10);
@@ -513,5 +520,32 @@ static void input_name(controls_btn_states_t *control_inputs)
 
 static void show_score_board(controls_btn_states_t *control_inputs)
 {
+    uint16_t col_width[2];
+    col_width[0] = 64;
+    col_width[1] = 64;
+    uint8_t highsores = graphics_draw_text("Highscores", 0, 0, 10);
+    graphics_set_alignment(highsores, LV_TEXT_ALIGN_CENTER);
+
+    uint8_t start = graphics_draw_text("Press START to continue", 0, 54, 10);
+    graphics_set_alignment(start, LV_TEXT_ALIGN_CENTER);
+
+    uint8_t table = graphics_draw_table(0,16, 128, 64, SCORE_BOARD_ENTRIES, 2, & col_width, 10);
+    LOG_DBG("Scoreboard:\n");
+
+    for(uint8_t i =0; i< SCORE_BOARD_ENTRIES ; i++)
+    {
+        if(score_board_scores[i] == 0)
+        {
+            break;
+        }
+
+        char score[11];
+        sprintf(&score, "%10u", score_board_scores[i]);
+
+        graphics_table_set_cell_value(table, i, 0, &score_board_names[i]);
+        graphics_table_set_cell_value(table, i, 1, &score);
+        LOG_DBG("Position %u: %s - %u\n", i+1,  &score_board_names[i],  score_board_scores[i]);
+    }
+
     return;
 }

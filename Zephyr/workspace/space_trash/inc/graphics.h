@@ -28,6 +28,10 @@ uint8_t graphics_create_text_area( int16_t x, int16_t y, uint16_t height, uint8_
 
 uint8_t graphics_text_input_screen( int16_t x, int16_t y, uint16_t height, uint8_t ta_obj_id, void (*cb_func)(const char *));
 
+uint8_t graphics_draw_table(int16_t x, int16_t y, uint16_t width, uint16_t height, uint8_t row_cnt, uint8_t column_cnt, uint16_t * col_widths,  uint8_t font_size);
+
+int graphics_table_set_cell_value(uint8_t graphics_obj_id, uint16_t row, uint16_t col, char *text);
+
 int graphics_set_font_size(uint8_t obj_id, uint8_t size);
 
 int graphics_set_text(uint8_t obj_id, char *text);

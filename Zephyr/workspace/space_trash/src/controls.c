@@ -22,7 +22,7 @@
 #include "controls.h"
 
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(controls, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(controls, LOG_LEVEL_INF);
 
 #include "app_version.h"
 
@@ -272,5 +272,8 @@ void controls_get_button_states(controls_btn_states_t* states)
     {
 	    *states = btn_states;
     }
-
+	LOG_DBG("Intr: Start:%i Select:%i Up:%i Down:%i Left:%i Right:%i A:%i B:%i X:%i Y:%i\n",
+		states->btn_start, states->btn_select, 
+		states->btn_up, states->btn_down, states->btn_left, states->btn_right, 
+		states->btn_a, states->btn_b, states->btn_x, states->btn_y);
 }

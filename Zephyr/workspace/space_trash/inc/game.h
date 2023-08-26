@@ -5,11 +5,11 @@
 #include "controls.h"
 
 #ifndef SCORE_BOARD_ENTRIES
-    #define SCORE_BOARD_ENTRIES 10
+    #define SCORE_BOARD_ENTRIES 3
 #endif
 
 #ifndef SCORE_BOARD_MAX_NAME_LENGTH
-    #define SCORE_BOARD_MAX_NAME_LENGTH 5
+    #define SCORE_BOARD_MAX_NAME_LENGTH 10
 #endif
 
 #ifndef MISSILE_COOLDOWN
