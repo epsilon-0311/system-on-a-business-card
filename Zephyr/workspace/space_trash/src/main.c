@@ -22,6 +22,7 @@
 #include "graphics.h"
 #include "controls.h"
 #include "game.h"
+#include "nvm.h"
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
@@ -33,6 +34,7 @@ void main(void)
 
 	controls_init(false);
 	graphics_init();
+	nvm_init();
 	//graphics_demo();
 	game_init();
 	controls_btn_states_t control_inputs;

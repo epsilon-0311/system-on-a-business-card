@@ -105,15 +105,13 @@ int graphics_init(void)
 {	
 	const struct device *display_dev;
 	
-    /*
-	//display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
-    display_dev = DEVICE_DT_GET(ZEPHYR_DISPLAY);ss
-    int ret = device_is_ready(display_dev);
-    if (ret !=0 ) {
+    //display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
+    display_dev = DEVICE_DT_GET(ZEPHYR_DISPLAY);
+    if (!device_is_ready(display_dev)) {
 		LOG_ERR("Device not ready, aborting test");
-		return ret;
+		return -1;
 	}
-    */
+    
 	
     // initialize objects array
     for(uint8_t i=0; i<MAX_GRAPHICS_OBJECTS ;i++)

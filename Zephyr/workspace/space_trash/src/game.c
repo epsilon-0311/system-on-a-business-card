@@ -17,6 +17,7 @@
 #include "graphics.h"
 #include "images.h"
 #include "game.h"
+#include "nvm.h"
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(game, LOG_LEVEL_DBG);
@@ -56,6 +57,10 @@ static uint8_t trash[MAX_TRASH_COUNTER];
 static uint8_t current_level;
 static uint32_t current_score;
 static uint32_t high_score;
+
+#define NVM_ID_SCORES 0
+#define NVM_ID_NAMES  1
+
 static uint32_t score_board_scores[SCORE_BOARD_ENTRIES];
 static char score_board_names[SCORE_BOARD_ENTRIES][SCORE_BOARD_MAX_NAME_LENGTH];
 
@@ -104,6 +109,16 @@ void game_init(void)
         score_board_scores[i]=0x0;
         score_board_names[i][0]='\0';
     }
+
+    (void) nvm_read(NVM_ID_SCORES, &score_board_scores, sizeof(score_board_scores), false, NULL);
+    (void) nvm_read(NVM_ID_NAMES, &score_board_names, sizeof(score_board_names), false, NULL);
+    /*
+    for(uint8_t i=0; i<SCORE_BOARD_ENTRIES; i++)
+    {
+        LOG_DBG("%d\n", score_board_scores[i]);
+    }
+    */
+
 }
 
 
@@ -505,6 +520,9 @@ static void submit_name(const char *name)
             break;
         }
     }
+
+    (void) nvm_write(NVM_ID_SCORES, &score_board_scores, sizeof(score_board_scores));
+    (void) nvm_write(NVM_ID_NAMES, &score_board_names, sizeof(score_board_names));
 
     state = GAME_STATE_PRE_SCORE_BOARD;
 }
