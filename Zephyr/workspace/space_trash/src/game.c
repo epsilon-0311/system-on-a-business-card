@@ -112,13 +112,6 @@ void game_init(void)
 
     (void) nvm_read(NVM_ID_SCORES, &score_board_scores, sizeof(score_board_scores), false, NULL);
     (void) nvm_read(NVM_ID_NAMES, &score_board_names, sizeof(score_board_names), false, NULL);
-    /*
-    for(uint8_t i=0; i<SCORE_BOARD_ENTRIES; i++)
-    {
-        LOG_DBG("%d\n", score_board_scores[i]);
-    }
-    */
-
 }
 
 
@@ -163,6 +156,7 @@ void game_step(controls_btn_states_t *control_inputs)
             // return value is negative if player died
             if(handle_game_run(control_inputs) != 0)
             {
+                LOG_INF("Player scored %u points", current_score);
                 graphics_delete_all_objects();
                 if(current_score > score_board_scores[SCORE_BOARD_ENTRIES-1])
                 {
@@ -220,7 +214,7 @@ static void show_start_screen(void)
 
 static void show_game_screen(void)
 {
-    sprintf( score_text_ptr,"Score: %5u", current_score);
+    sprintf( score_text_ptr,"Lvl: %3u Score: %5u", current_level, current_score);
     score_label_id =graphics_draw_text(score_text_ptr, 0, 0, 10);
     // the reference to line object is not required by the game
     (void)graphics_draw_line(&top_line_points, 2, 2);
@@ -239,7 +233,22 @@ static void show_game_screen(void)
 static int handle_game_run(controls_btn_states_t *control_inputs)
 {
     int16_t move_x=0, move_y=0;
-    
+    static uint16_t iteration_cnt=0;
+
+    if((MAX_TRASH_COOLDOWN-(LEVEL_COOLDOWN_REDUCTION*current_level))>=MIN_TRASH_COOLDOWN)
+    {
+        if(iteration_cnt >= ITERATIONS_PER_LEVEL)
+        {
+            iteration_cnt=0;
+            current_level++;
+        }
+        else
+        {
+            iteration_cnt++;
+        }
+    }
+
+
     if(control_inputs->btn_up==1)
     {
         if(current_player_postion_y > player_postion_limit_y_top)
@@ -280,8 +289,10 @@ static int handle_game_run(controls_btn_states_t *control_inputs)
     graphics_move_object(player_id, move_x, move_y, false);
 
     int ret = handle_colisions();
-    sprintf( score_text_ptr,"Score: %5u", current_score);
+    sprintf(score_text_ptr,"Lvl: %3u Score: %5u", current_level, current_score);
     graphics_set_text(score_label_id, score_text_ptr);
+    
+
     return ret;
 }
 
@@ -302,6 +313,7 @@ static void handle_missiles(uint8_t fire_shot)
                 // check if missile was created
                 if(missiles[i] != 0xFF)
                 {
+                    LOG_DBG("Missile spawned at %u:%u", current_player_postion_x+7, current_player_postion_y+1);
                     fresh_missile=i;
                     // reset fire counter
                     fire_counter = MISSILE_COOLDOWN;
@@ -331,8 +343,13 @@ static void handle_missiles(uint8_t fire_shot)
                 // missile went out of screen
                 if(x >=game_area_x_right)
                 {
+                    LOG_DBG("Missile left game area at %u:%u", x, y);
                     (void)graphics_delete_object(missiles[i]);
                     missiles[i] = 0xFF;
+                }
+                else
+                {
+                    LOG_DBG("Missile moved to %u:%u", x, y);
                 }
             }
             // graphics object doesnt seem to exist, clear it from missile array
@@ -362,16 +379,19 @@ static void handle_trash(void)
                 {
                     int16_t y_pos = game_area_y_top + (rand() % (game_area_y_bottom-game_area_y_top-5));
                     trash[i] = graphics_draw_image(&st_bitmap_trash_5x5_1, game_area_x_right, y_pos);
+                    LOG_DBG("Spawning trash trash_5x5_1 at %u:%u", game_area_x_right, y_pos);
                 }
                 else if(trash_type==1)
                 {
                     int16_t y_pos = game_area_y_top + (rand() % (game_area_y_bottom-game_area_y_top-5));
                     trash[i] = graphics_draw_image(&st_bitmap_trash_5x5_2, game_area_x_right, y_pos);    
+                    LOG_DBG("Spawning trash trash_5x5_2 at %u:%u", game_area_x_right, y_pos);
                 }
                 else
                 {
                     int16_t y_pos = game_area_y_top + (rand() % (game_area_y_bottom-game_area_y_top-7));
                     trash[i] = graphics_draw_image(&st_bitmap_trash_7x7, game_area_x_right, y_pos);
+                    LOG_DBG("Spawning trash trash_7x7 at %u:%u", game_area_x_right, y_pos);
                 }
 
                 // check if trash was created
@@ -379,7 +399,18 @@ static void handle_trash(void)
                 {
                     fresh_trash=i;
                     // reset trash cooldown, reduced by current level
-                    trash_cooldown = MAX_TRASH_COOLDOWN-current_level;
+                    if((MAX_TRASH_COOLDOWN-(LEVEL_COOLDOWN_REDUCTION*current_level))>=MIN_TRASH_COOLDOWN)
+                    {
+                        trash_cooldown = MAX_TRASH_COOLDOWN-LEVEL_COOLDOWN_REDUCTION*current_level;
+                    }
+                    else
+                    {
+                        trash_cooldown = MIN_TRASH_COOLDOWN;
+                    }   
+                }
+                else
+                {
+                    LOG_WRN("Spawning trash unsuccesful");
                 }
                 break;
             }
@@ -406,8 +437,13 @@ static void handle_trash(void)
                 // trash went out of screen
                 if(x <=game_area_x_left)
                 {
+                    LOG_DBG("Trash left game area at %u:%u", x, y);
                     (void)graphics_delete_object(trash[i]);
                     trash[i] = 0xFF;
+                }
+                else
+                {
+                    LOG_DBG("Trash moved to %u:%u", x, y);
                 }
             }
             // graphics object doesnt seem to exist, clear it from trash array
@@ -450,6 +486,7 @@ static int handle_colisions(void)
                 y_trash_bottom > current_player_postion_y
                 )
             {
+                LOG_INF("Trash colided with player");
                 // colision with player detected, end game
                 return -1;
             }
@@ -482,6 +519,8 @@ static int handle_colisions(void)
                         
                         // size of trash == score to eliminate trash
                         current_score+=trash_height;
+
+                        LOG_INF("Missile and trash colission");
 
                         break;
                     }

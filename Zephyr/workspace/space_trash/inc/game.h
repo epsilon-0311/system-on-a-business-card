@@ -21,12 +21,26 @@
 #endif
 
 #ifndef MAX_TRASH_COUNTER
-    #define MAX_TRASH_COUNTER 10
+    #define MAX_TRASH_COUNTER 20
 #endif
 
 #ifndef MAX_TRASH_COOLDOWN
-    #define MAX_TRASH_COOLDOWN 100
+    #define MAX_TRASH_COOLDOWN 75
 #endif
+
+#ifndef MIN_TRASH_COOLDOWN
+    #define MIN_TRASH_COOLDOWN 5
+#endif
+
+#ifndef ITERATIONS_PER_LEVEL
+    #define ITERATIONS_PER_LEVEL 250
+#endif
+
+#ifndef LEVEL_COOLDOWN_REDUCTION
+    #define LEVEL_COOLDOWN_REDUCTION 5
+#endif
+
+
 
 // forward increment of pixels per iteration
 #ifndef PLAYER_SPEED
