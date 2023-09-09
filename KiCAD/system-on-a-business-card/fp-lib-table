@@ -1,5 +1,7 @@
 (fp_lib_table
+  (version 7)
   (lib (name "Prj_touch_pads")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_touch_pads.pretty")(options "")(descr ""))
   (lib (name "Prj_display")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_display.pretty")(options "")(descr ""))
   (lib (name "Prj_Connectors_USB")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_Connectors_USB.pretty")(options "")(descr ""))
+  (lib (name "Prj_connectors")(type "KiCad")(uri "/home/christoph/git/system-on-a-business-card/KiCAD/libraries/footprints/Prj_connectors.pretty")(options "")(descr ""))
 )
