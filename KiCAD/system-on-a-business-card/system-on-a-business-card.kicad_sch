@@ -2043,7 +2043,7 @@
       (effects (font (size 1.27 1.27)) (justify left))
       (uuid 2bd1c208-ccc9-42a4-a304-e8e87cd3e79f)
     )
-    (pin "INT" input (at 119.38 71.12 180)
+    (pin "INT" output (at 119.38 71.12 180)
       (effects (font (size 1.27 1.27)) (justify left))
       (uuid 6470d401-33fc-47b6-9445-d415c126229e)
     )
