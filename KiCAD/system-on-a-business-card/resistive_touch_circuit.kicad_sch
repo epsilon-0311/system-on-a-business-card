@@ -1175,7 +1175,6 @@
     (uuid f894b488-53ca-43f5-88e1-1383e680dde0)
   )
 
-  (no_connect (at 195.58 73.66) (uuid 14cada65-bd36-4ce3-a6fe-19e6c5a9697a))
   (no_connect (at 195.58 86.36) (uuid 448d4811-e36e-4a6a-b769-ddee77601747))
   (no_connect (at 195.58 83.82) (uuid 71caafb7-4f47-4e9b-86a3-674fca6bae84))
   (no_connect (at 195.58 78.74) (uuid 82754850-ca83-4030-aec8-0e500a1b3713))
@@ -1647,6 +1646,10 @@
   (hierarchical_label "INT" (shape input) (at 148.59 50.8 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 7ab3529e-9714-49c7-a6ae-416d14538b9d)
+  )
+  (hierarchical_label "SDCard_DET" (shape output) (at 195.58 73.66 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid 858cb303-9bbb-4c2c-be2d-c9a7852cfe3f)
   )
   (hierarchical_label "SCL" (shape output) (at 148.59 48.26 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
