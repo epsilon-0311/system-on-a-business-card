@@ -64,8 +64,8 @@
       35,
       36
     ],
-    "visible_layers": "0009020_ffffffff",
-    "zone_display_mode": 0
+    "visible_layers": "0009028_ffffffff",
+    "zone_display_mode": 1
   },
   "meta": {
     "filename": "system-on-a-business-card.kicad_prl",
