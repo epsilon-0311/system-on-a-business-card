@@ -56,7 +56,9 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "items_not_allowed|91982500|70620459|99132564-f6bb-4eb4-b22c-df47155945aa|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "version": 2
       },
@@ -212,7 +214,9 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      "power_pin_not_driven|2362200|622300|6830e621-eb8b-45e2-aa21-30b50128d17a|00000000-0000-0000-0000-000000000000|||"
+    ],
     "meta": {
       "version": 0
     },
@@ -532,6 +536,10 @@
     [
       "53e384a3-4b4b-4de7-9355-87251e757786",
       "Resistive Touch Circuit"
+    ],
+    [
+      "457ea608-3def-4c0d-8df0-d39ca1f37662",
+      "SD-Card"
     ]
   ],
   "text_variables": {}

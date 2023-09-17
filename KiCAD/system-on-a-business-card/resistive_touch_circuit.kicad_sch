@@ -1179,7 +1179,6 @@
   (no_connect (at 195.58 83.82) (uuid 71caafb7-4f47-4e9b-86a3-674fca6bae84))
   (no_connect (at 195.58 78.74) (uuid 82754850-ca83-4030-aec8-0e500a1b3713))
   (no_connect (at 195.58 81.28) (uuid a187e9b1-8bcc-4874-80fb-de3d4d0688c6))
-  (no_connect (at 195.58 76.2) (uuid c5a5dabd-2b35-4306-b7d4-384935f40158))
 
   (wire (pts (xy 149.86 83.82) (xy 149.86 86.36))
     (stroke (width 0) (type default))
@@ -1639,6 +1638,10 @@
     )
   )
 
+  (hierarchical_label "DISPLAY_RESET" (shape input) (at 195.58 76.2 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid 2b1500e6-3c67-47ee-b107-26280c40b098)
+  )
   (hierarchical_label "SDA" (shape bidirectional) (at 148.59 45.72 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 360b24be-8622-4737-a17b-bedcd16d0a4f)
