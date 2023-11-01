@@ -5,4 +5,5 @@
   (lib (name "Prj_Connectors_USB")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_Connectors_USB.pretty")(options "")(descr ""))
   (lib (name "Prj_connectors")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_connectors.pretty")(options "")(descr ""))
   (lib (name "Prj_connector_card")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_connector_card.pretty")(options "")(descr ""))
+  (lib (name "Prj_speaker")(type "KiCad")(uri "${KIPRJMOD}/../libraries/footprints/Prj_speaker.pretty")(options "")(descr ""))
 )

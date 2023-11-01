@@ -57,7 +57,10 @@
         }
       ],
       "drc_exclusions": [
-        "items_not_allowed|91982500|70620459|99132564-f6bb-4eb4-b22c-df47155945aa|00000000-0000-0000-0000-000000000000"
+        "items_not_allowed|91982500|70620459|99132564-f6bb-4eb4-b22c-df47155945aa|00000000-0000-0000-0000-000000000000",
+        "unconnected_items|114380000|72100000|febf7e0b-638a-4db4-aa89-09fac6900edc|5040d061-68fe-4542-a9a4-c43cbab725c9",
+        "unconnected_items|125620000|72100000|5270c349-e039-4803-9657-e46824eec408|febf7e0b-638a-4db4-aa89-09fac6900edc",
+        "unconnected_items|125620000|76100000|785aef90-9c31-4491-b169-3bb04a9d13cd|5270c349-e039-4803-9657-e46824eec408"
       ],
       "meta": {
         "version": 2
@@ -538,6 +541,10 @@
     [
       "457ea608-3def-4c0d-8df0-d39ca1f37662",
       "SD-Card"
+    ],
+    [
+      "28425568-e47a-4e0f-9e8d-170bc68817e5",
+      "Audio Circuit"
     ]
   ],
   "text_variables": {}
