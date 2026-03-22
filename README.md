@@ -1,3 +1,6 @@
+# The project has been moved to [Codeberg](https://codeberg.org/epsilon-0311/system-on-a-business-card). 
+
+
 # system-on-a-business-card (SoBC)
 
 The System on a Business Card is a miniature system in the size of a business card.
